@@ -1,0 +1,123 @@
+guid: 17093489439816822965
+name: default_scene
+entities:
+  - Id: 11176069394335146902
+    Tag: PointLight
+    Transform:
+      position:
+        - 3.3357437
+        - 2.2105496
+        - 2.3947
+      rotation:
+        - 0
+        - 0
+        - 0
+        - 1
+      scale:
+        - 16
+        - 16
+        - 16
+    Light:
+      light_type: Point
+      color:
+        - 1
+        - 1
+        - 1
+      intensity: 6.6
+      radius: 16
+  - Id: 9258085397400218071
+    Tag: PrimitiveCube
+    Transform:
+      position:
+        - 0
+        - 0
+        - 0
+      rotation:
+        - 0
+        - 0
+        - 0
+        - 1
+      scale:
+        - 2.33
+        - 2.33
+        - 2.33
+    Model:
+      model:
+        type: Model
+        guid: 1
+        path: PrimitiveCube
+      material_overrides:
+        - 9757647439610745383
+  - Id: 15649168596339647703
+    Tag: PrimitiveSphere
+    Transform:
+      position:
+        - 0.46543038
+        - 2.2980351
+        - -0.003450511
+      rotation:
+        - 0
+        - 0
+        - 0
+        - 1
+      scale:
+        - 1
+        - 1
+        - 1
+    Model:
+      model:
+        type: Model
+        guid: 2
+        path: PrimitiveSphere
+      material_overrides:
+        - 10473287494837267733
+  - Id: 11707892159918629037
+    Tag: Camera
+    Transform:
+      position:
+        - 6.6
+        - 3.4
+        - 0
+      rotation:
+        - 0
+        - 0
+        - 0.17639013
+        - 0.98432034
+      scale:
+        - 0.99999994
+        - 0.99999994
+        - 1
+    Camera:
+      projection: Perspective
+      view_mode: Rendered
+      resolution:
+        - 1920
+        - 1080
+      ortho_size: 2
+      near: 0.1
+      far: 100000
+      fov: 40
+      active: true
+  - Id: 16301536977640310300
+    Tag: 3dmodel
+    Transform:
+      position:
+        - -0.6475963
+        - 4.473681
+        - 0
+      rotation:
+        - 0
+        - 0
+        - 0
+        - 1
+      scale:
+        - 1
+        - 1
+        - 1
+    Model:
+      model:
+        type: Model
+        guid: 8525917840034386501
+        path: Models/box/box.obj
+      material_overrides:
+        - 0

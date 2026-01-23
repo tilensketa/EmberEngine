@@ -1,0 +1,9 @@
+asset_handle:
+  type: Texture
+  guid: 17696312573492283751
+  path: Models/box/Textures/box_example_None_Normal.png
+import_settings:
+  texture_type: Normal
+  filter_type: Linear
+  wrap_type: ClampToEdge
+  generate_mipmaps: true

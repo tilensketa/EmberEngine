@@ -1,0 +1,5 @@
+asset_handle:
+  type: Material
+  guid: 10473287494837267733
+  path: Materials/green.embermat
+import_settings: ~

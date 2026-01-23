@@ -1,0 +1,34 @@
+[submodule "Ember/dependencies/glfw"]
+	path = Ember/dependencies/glfw
+	url = https://github.com/glfw/glfw.git
+[submodule "Ember/dependencies/glad"]
+	path = Ember/dependencies/glad
+	url = https://github.com/Dav1dde/glad.git
+[submodule "Ember/dependencies/glm"]
+	path = Ember/dependencies/glm
+	url = https://github.com/g-truc/glm.git
+[submodule "Ember/dependencies/spdlog"]
+	path = Ember/dependencies/spdlog
+	url = https://github.com/gabime/spdlog.git
+[submodule "Ember/dependencies/entt"]
+	path = Ember/dependencies/entt
+	url = https://github.com/skypjack/entt.git
+[submodule "Ember/dependencies/stb"]
+	path = Ember/dependencies/stb
+	url = https://github.com/nothings/stb.git
+[submodule "EmberEditor/dependencies/imgui"]
+	path = EmberEditor/dependencies/imgui
+	url = https://github.com/ocornut/imgui.git
+	branch = docking
+[submodule "Ember/dependencies/assimp"]
+	path = Ember/dependencies/assimp
+	url = https://github.com/assimp/assimp.git
+[submodule "EmberEditor/dependencies/ImGuizmo"]
+	path = EmberEditor/dependencies/ImGuizmo
+	url = https://github.com/CedricGuillemet/ImGuizmo.git
+[submodule "Ember/dependencies/yaml-cpp"]
+	path = Ember/dependencies/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp.git
+[submodule "EmberEditor/dependencies/portable-file-dialogs"]
+	path = EmberEditor/dependencies/portable-file-dialogs
+	url = https://github.com/samhocevar/portable-file-dialogs.git

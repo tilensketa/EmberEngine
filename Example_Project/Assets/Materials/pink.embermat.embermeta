@@ -1,0 +1,5 @@
+asset_handle:
+  type: Material
+  guid: 9757647439610745383
+  path: Materials/pink.embermat
+import_settings: ~

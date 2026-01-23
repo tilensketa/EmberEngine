@@ -1,0 +1,73 @@
+guid: 15091691168264628828
+name: new_scene
+entities:
+  - Id: 2218624985399473805
+    Tag: PointLight
+    Transform:
+      position:
+        - 1.2
+        - 0.5706423
+        - 2.307129
+      rotation:
+        - 0
+        - 0
+        - 0
+        - 1
+      scale:
+        - 18.7
+        - 18.7
+        - 18.7
+    Light:
+      light_type: Point
+      color:
+        - 1
+        - 1
+        - 1
+      intensity: 14.3
+      radius: 18.7
+  - Id: 302334128815163870
+    Tag: PrimitiveSphere
+    Transform:
+      position:
+        - 0
+        - 0.47558594
+        - -0.61035156
+      rotation:
+        - 0
+        - 0
+        - 0
+        - 1
+      scale:
+        - 1
+        - 1
+        - 1
+    Model:
+      model:
+        type: Model
+        guid: 2
+        path: PrimitiveSphere
+      material_overrides:
+        - 9757647439610745383
+  - Id: 11653746018870426986
+    Tag: Empty
+    Transform:
+      position:
+        - 0
+        - -1.0224609
+        - 0.7368164
+      rotation:
+        - 0
+        - 0
+        - 0
+        - 1
+      scale:
+        - 1
+        - 1
+        - 1
+    Model:
+      model:
+        type: Model
+        guid: 8525917840034386501
+        path: Models/box/box.obj
+      material_overrides:
+        - 0

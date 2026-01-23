@@ -1,0 +1,5 @@
+asset_handle:
+  type: Material
+  guid: 3504036447204300810
+  path: Materials/blue.embermat
+import_settings: ~

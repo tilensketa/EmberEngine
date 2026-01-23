@@ -1,0 +1,8 @@
+asset_handle:
+  type: Model
+  guid: 8525917840034386501
+  path: Models/box/box.obj
+import_settings: ~
+dependencies:
+  - 6945977123682371205
+  - 17341768741007097097

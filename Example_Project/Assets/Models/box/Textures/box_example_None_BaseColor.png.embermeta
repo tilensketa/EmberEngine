@@ -1,0 +1,9 @@
+asset_handle:
+  type: Texture
+  guid: 17758275746109114723
+  path: Models/box/Textures/box_example_None_BaseColor.png
+import_settings:
+  texture_type: Albedo
+  filter_type: Linear
+  wrap_type: ClampToEdge
+  generate_mipmaps: true

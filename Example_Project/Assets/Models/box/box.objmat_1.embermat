@@ -1,0 +1,11 @@
+albedo_color:
+  - 1
+  - 1
+  - 1
+emission: 0
+metalness: 0
+roughness: 1
+albedo_map: 17758275746109114723
+normal_map: 17696312573492283751
+metalness_map: 224078865546940762
+roughness_map: 7119403031925903581

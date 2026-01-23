@@ -1,0 +1,9 @@
+asset_handle:
+  type: Texture
+  guid: 102
+  path: ../../EmberEditor/res/icons/obj.png
+import_settings:
+  texture_type: UI
+  filter_type: Linear
+  wrap_type: ClampToEdge
+  generate_mipmaps: false

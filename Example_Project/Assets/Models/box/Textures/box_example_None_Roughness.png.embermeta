@@ -1,0 +1,9 @@
+asset_handle:
+  type: Texture
+  guid: 7119403031925903581
+  path: Models/box/Textures/box_example_None_Roughness.png
+import_settings:
+  texture_type: Roughness
+  filter_type: Linear
+  wrap_type: ClampToEdge
+  generate_mipmaps: true

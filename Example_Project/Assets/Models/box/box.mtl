@@ -1,0 +1,15 @@
+# File produced by Open Asset Import Library (http://www.assimp.sf.net)
+# (assimp v3.1.206520482)
+
+newmtl None
+kd 0.8 0.8 0.8
+ka 0.8 0.8 0.8
+ks 0.8 0.8 0.8
+ke 0 0 0
+d 1
+Ns 2000
+illum 2
+map_Kd Textures/box_example_None_BaseColor.png
+norm Textures/box_example_None_Normal.png
+map_Pr Textures/box_example_None_Roughness.png
+map_Pm Textures/box_example_None_Metallic.png

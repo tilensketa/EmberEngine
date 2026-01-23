@@ -1,0 +1,10 @@
+asset_handle:
+  type: Material
+  guid: 17341768741007097097
+  path: Models/box/box.objmat_1.embermat
+import_settings: ~
+dependencies:
+  - 17758275746109114723
+  - 17696312573492283751
+  - 224078865546940762
+  - 7119403031925903581
