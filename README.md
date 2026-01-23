@@ -68,7 +68,7 @@ A minimal project showcasing:
 
 ### Cloning
 ```bash
-git clone --recurse-submodules https://github.com/tilensketa/Ember.git
+git clone --recurse-submodules https://github.com/tilensketa/EmberEngine.git
 ```
 
 ### Build
