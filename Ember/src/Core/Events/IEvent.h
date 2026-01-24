@@ -3,8 +3,6 @@
 #include <cstdint>
 #include <string>
 
-#include "Core/Utils.h"
-
 namespace Ember {
 namespace Event {
 enum class EventType : uint8_t {
@@ -13,7 +11,6 @@ enum class EventType : uint8_t {
   WINDOW_RESIZE,
 
   RENDER_REQUEST,
-  RENDER_COMPLETE,
 
   KEY_PRESS,
   KEY_RELEASE,

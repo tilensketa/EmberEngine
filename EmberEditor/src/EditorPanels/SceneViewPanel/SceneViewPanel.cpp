@@ -5,8 +5,6 @@
 
 #include <ImGuizmo.h>
 
-#define RENDER_SCENE_ID 1
-
 namespace Ember {
 void SceneViewPanel::Update() {
   ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
@@ -15,7 +13,7 @@ void SceneViewPanel::Update() {
   ImGui::PopStyleVar(2);
 
   auto scene = mCtx.projectManager.GetSceneManager().GetCurrentScene();
-  if(!scene){
+  if (!scene) {
     ImGui::End();
     return;
   }
@@ -30,7 +28,7 @@ void SceneViewPanel::Update() {
   renderContext.camera = camera;
   renderContext.cameraTransform = mCtx.editorState.temporary.camTransform;
 
-  Event::RenderReqeust event(RENDER_SCENE_ID, renderContext);
+  Event::RenderRequest event(renderContext);
   Application::Get().DispatchEvent(event);
 
   handleEditor();
@@ -66,18 +64,7 @@ void SceneViewPanel::Update() {
 
   ImGui::End();
 }
-void SceneViewPanel::OnEvent(Ember::Event::IEvent &event) {
-  if (event.GetType() == Event::EventType::RENDER_COMPLETE) {
-    if (auto *renderCompleteEvent =
-            dynamic_cast<Event::RenderComplete *>(&event)) {
-      if (renderCompleteEvent->id == RENDER_SCENE_ID) {
-        mRenderTarget = std::make_unique<RenderTarget>(
-            *renderCompleteEvent->renderContext.renderTarget);
-      }
-    }
-    event.handled = true;
-  }
-}
+void SceneViewPanel::OnEvent(Ember::Event::IEvent &event) {}
 
 void SceneViewPanel::showGizmo() {
   ImGuizmo::BeginFrame();

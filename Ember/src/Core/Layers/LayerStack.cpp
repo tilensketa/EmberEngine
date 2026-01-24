@@ -1,5 +1,5 @@
 #include "LayerStack.h"
-#include "Core/Logger.h"
+
 #include <algorithm>
 
 namespace Ember {
@@ -26,7 +26,6 @@ void LayerStack::OnUpdate() {
 }
 
 void LayerStack::DispatchEvent(Event::IEvent &event) {
-  // LOG_DEBUG("Dispatch event: {}", event.ToString());
   for (auto layer : mLayers) {
     layer->OnEvent(event);
     if (event.handled) break;

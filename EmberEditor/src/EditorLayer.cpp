@@ -92,14 +92,16 @@ void EditorLayer::OnUpdate() {
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 void EditorLayer::OnEvent(Event::IEvent &event) {
-  if (event.GetType() == Event::EventType::PROJECT_OPEN) {
-    auto &e = static_cast<Event::ProjectOpen &>(event);
-    auto &temp = mEditorState->temporary;
-    temp.selectedFolder = e.directories.root;
-    temp.selectedEntityHandle.reset();
-    temp.selectedMaterial.reset();
-    event.handled = true;
-  }
+  EventDispatcher dispatcher(event);
+  dispatcher.Dispatch<Event::ProjectOpen>(
+      Event::EventType::PROJECT_OPEN, [this](Event::ProjectOpen &e) {
+        auto &temp = mEditorState->temporary;
+        temp.selectedFolder = e.directories.root;
+        temp.selectedEntityHandle.reset();
+        temp.selectedMaterial.reset();
+        return true;
+      });
+
   for (auto &panel : mEditorPanels) {
     panel->OnEvent(event);
     if (event.handled) {

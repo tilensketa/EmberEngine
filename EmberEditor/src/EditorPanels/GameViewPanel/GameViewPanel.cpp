@@ -5,8 +5,6 @@
 
 #include <ImGuizmo.h>
 
-#define RENDER_GAME_ID 2
-
 namespace Ember {
 void GameViewPanel::Update() {
   ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
@@ -48,7 +46,7 @@ void GameViewPanel::Update() {
   renderContext.camera = activeCamera;
   renderContext.cameraTransform = activeCameraTransform;
 
-  Event::RenderReqeust event(RENDER_GAME_ID, renderContext);
+  Event::RenderRequest event(renderContext);
   Application::Get().DispatchEvent(event);
 
   if (!mRenderTarget) {
@@ -79,16 +77,5 @@ void GameViewPanel::Update() {
 
   ImGui::End();
 }
-void GameViewPanel::OnEvent(Ember::Event::IEvent &event) {
-  if (event.GetType() == Event::EventType::RENDER_COMPLETE) {
-    if (auto *renderCompleteEvent =
-            dynamic_cast<Event::RenderComplete *>(&event)) {
-      if (renderCompleteEvent->id == RENDER_GAME_ID) {
-        mRenderTarget = std::make_unique<RenderTarget>(
-            *renderCompleteEvent->renderContext.renderTarget);
-      }
-    }
-    event.handled = true;
-  }
-}
+void GameViewPanel::OnEvent(Ember::Event::IEvent &event) {}
 } // namespace Ember

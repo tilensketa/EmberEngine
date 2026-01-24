@@ -33,13 +33,16 @@ public:
     mEventCallback = callback;
   }
 
-  uint32_t GetWidth() const {return mWidth;}
-  uint32_t GetHeight() const {return mHeight;}
-  void SetWidth(uint32_t width) {mWidth = width; }
-  void SetHeight(uint32_t height) {mHeight = height;}
+  uint32_t GetWidth() const { return mWidth; }
+  uint32_t GetHeight() const { return mHeight; }
+  void Resize(const uint32_t &w, const uint32_t &h) {
+    mWidth = w;
+    mHeight = h;
+  }
 
 public:
   EventCallbackFn mEventCallback;
+
 private:
   GLFWwindow *mWindow = nullptr;
   uint32_t mWidth;

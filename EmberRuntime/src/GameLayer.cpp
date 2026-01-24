@@ -1,6 +1,5 @@
 #include "GameLayer.h"
 
-#define RENDER_RUNTIME_ID 5
 #define RUNTIME_SHADERS "../../EmberRuntime/res/shaders/"
 
 namespace Ember {
@@ -71,7 +70,7 @@ void GameLayer::OnUpdate() {
   renderContext.camera = activeCamera;
   renderContext.cameraTransform = activeCameraTransform;
 
-  Event::RenderReqeust event(RENDER_RUNTIME_ID, renderContext);
+  Event::RenderRequest event(renderContext);
   Application::Get().DispatchEvent(event);
 
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -92,16 +91,5 @@ void GameLayer::OnUpdate() {
   glEnable(GL_DEPTH_TEST);
 }
 
-void GameLayer::OnEvent(Event::IEvent &event) {
-  if (event.GetType() == Event::EventType::RENDER_COMPLETE) {
-    if (auto *renderCompleteEvent =
-            dynamic_cast<Event::RenderComplete *>(&event)) {
-      if (renderCompleteEvent->id == RENDER_RUNTIME_ID) {
-        mRenderTarget = std::make_unique<RenderTarget>(
-            *renderCompleteEvent->renderContext.renderTarget);
-      }
-    }
-    event.handled = true;
-  }
-}
+void GameLayer::OnEvent(Event::IEvent &event) {}
 } // namespace Ember

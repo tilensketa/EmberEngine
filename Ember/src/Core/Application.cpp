@@ -1,5 +1,8 @@
 #include "Application.h"
 
+#include "Events/Events.h"
+#include "Input.h"
+
 #include "Layers/RenderLayer.h"
 #include "Logger.h"
 
@@ -11,8 +14,7 @@ Application *Application::sInstance = nullptr;
 Application::Application(const ApplicationSpecification &specification) {
   Logger::Init();
   mWindow = std::make_shared<Window>(specification.windowSpec);
-  mWindow->SetEventCallback(
-      [this](Event::IEvent &e) { mLayerStack->DispatchEvent(e); });
+  mWindow->SetEventCallback([this](Event::IEvent &e) { DispatchEvent(e); });
 
   mAssetManager = std::make_unique<AssetManager>("");
   EngineAssetLoader::LoadBuiltInAssets(*mAssetManager);
@@ -38,6 +40,50 @@ void Application::Stop() {}
 
 Application &Application::Get() { return *sInstance; }
 void Application::DispatchEvent(Event::IEvent &event) {
+  // LOG_DEBUG("Event: {}", event.ToString());
+  EventDispatcher dispatcher(event);
+
+  // Window events
+  dispatcher.Dispatch<Event::WindowResize>(
+      Event::EventType::WINDOW_RESIZE, [this](Event::WindowResize &e) {
+        mWindow->Resize(e.width, e.height);
+        glViewport(0, 0, e.width, e.height);
+        return true;
+      });
+  // Key events
+  dispatcher.Dispatch<Event::KeyPress>(Event::EventType::KEY_PRESS,
+                                       [this](Event::KeyPress &e) {
+                                         Input::OnKeyEvent(e.keycode, true);
+                                         return false;
+                                       });
+  dispatcher.Dispatch<Event::KeyRelease>(Event::EventType::KEY_RELEASE,
+                                         [this](Event::KeyRelease &e) {
+                                           Input::OnKeyEvent(e.keycode, false);
+                                           return false;
+                                         });
+  dispatcher.Dispatch<Event::KeyRepeat>(Event::EventType::KEY_REPEAT,
+                                        [this](Event::KeyRepeat &e) {
+                                          // TODO make key repeat input
+                                          return false;
+                                        });
+  // Mouse events
+  dispatcher.Dispatch<Event::MouseButtonPress>(
+      Event::EventType::MOUSE_BUTTON_PRESS, [this](Event::MouseButtonPress &e) {
+        Input::OnMouseButtonEvent(e.keycode, true);
+        return false;
+      });
+  dispatcher.Dispatch<Event::MouseButtonRelease>(
+      Event::EventType::MOUSE_BUTTON_RELEASE,
+      [this](Event::MouseButtonRelease &e) {
+        Input::OnMouseButtonEvent(e.keycode, false);
+        return false;
+      });
+  dispatcher.Dispatch<Event::MouseMove>(Event::EventType::MOUSE_MOVE,
+                                        [this](Event::MouseMove &e) {
+                                          Input::OnMouseMoveEvent(e.x, e.y);
+                                          return false;
+                                        });
+
   mLayerStack->DispatchEvent(event);
 }
 } // namespace Ember

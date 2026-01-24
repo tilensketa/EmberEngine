@@ -1,7 +1,6 @@
 #include "RenderLayer.h"
-#include "Core/Events/RenderEvents.h"
 
-#include "Core/Application.h"
+#include "Core/Events/Events.h"
 
 namespace Ember {
 RenderLayer::RenderLayer(ProjectManager &projectManager,
@@ -14,16 +13,12 @@ void RenderLayer::OnAttach() {}
 void RenderLayer::OnDetach() {}
 void RenderLayer::OnUpdate() {}
 void RenderLayer::OnEvent(Event::IEvent &event) {
-  if (event.GetType() == Event::EventType::RENDER_REQUEST) {
-    if (auto *renderRequestEvent =
-            dynamic_cast<Event::RenderReqeust *>(&event)) {
-      RenderContext renderContext = renderRequestEvent->renderContext;
-      uint8_t id = renderRequestEvent->id;
-      mRenderer->Render(renderContext);
-      Event::RenderComplete renderCompleteEvent(id, renderContext);
-    }
-    event.handled = true;
-  }
+  EventDispatcher dispatcher(event);
+  dispatcher.Dispatch<Event::RenderRequest>(
+      Event::EventType::RENDER_REQUEST, [this](Event::RenderRequest &e) {
+        mRenderer->Render(e.renderContext);
+        return true;
+      });
 }
 
 } // namespace Ember

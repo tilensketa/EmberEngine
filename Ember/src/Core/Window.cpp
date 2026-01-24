@@ -11,10 +11,6 @@ static void framebufferSizeCallback(GLFWwindow *glfwWindow, int width, int heigh
 
   Event::WindowResize e(width, height);
   window->mEventCallback(e);
-
-  window->SetWidth(width);
-  window->SetHeight(height);
-  glViewport(0,0,width, height);
 }
 static void KeyCallback(GLFWwindow *glfwWindow, int key, int scancode,
                         int action, int mods) {
@@ -24,11 +20,9 @@ static void KeyCallback(GLFWwindow *glfwWindow, int key, int scancode,
   if (action == GLFW_PRESS) {
     Event::KeyPress e(key);
     window->mEventCallback(e);
-    Input::OnKeyEvent(key, true);
   } else if (action == GLFW_RELEASE) {
     Event::KeyRelease e(key);
     window->mEventCallback(e);
-    Input::OnKeyEvent(key, false);
   } else if (action == GLFW_REPEAT) {
     Event::KeyRepeat e(key);
     window->mEventCallback(e);
@@ -42,11 +36,9 @@ static void MouseButtonCallback(GLFWwindow *glfwWindow, int button, int action,
   if (action == GLFW_PRESS) {
     Event::MouseButtonPress e(button);
     window->mEventCallback(e);
-    Input::OnMouseButtonEvent(button, true);
   } else if (action == GLFW_RELEASE) {
     Event::MouseButtonRelease e(button);
     window->mEventCallback(e);
-    Input::OnMouseButtonEvent(button, false);
   }
 }
 static void MouseMoveCallback(GLFWwindow *glfwWindow, double xpos,
@@ -56,7 +48,6 @@ static void MouseMoveCallback(GLFWwindow *glfwWindow, double xpos,
 
   Event::MouseMove e(xpos, ypos);
   window->mEventCallback(e);
-  Input::OnMouseMoveEvent(xpos, ypos);
 }
 
 Window::Window(const WindowSpecification &specification) {
