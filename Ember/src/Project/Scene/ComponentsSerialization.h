@@ -129,4 +129,52 @@ template <> struct convert<Ember::Component::Light> {
     return true;
   }
 };
+
+template <> struct convert<Ember::Component::Rigidbody> {
+  static Node encode(const Ember::Component::Rigidbody &rb) {
+    Node node;
+    node["body_type"] =
+        Ember::Utils::ToString<Ember::Component::Rigidbody::BodyType>(
+            rb.bodyType);
+    node["mass"] = rb.mass;
+    node["use_gravity"] = rb.useGravity;
+    return node;
+  }
+  static bool decode(const Node &node, Ember::Component::Rigidbody &rb) {
+    rb.bodyType =
+        Ember::Utils::FromString<Ember::Component::Rigidbody::BodyType>(
+            node["body_type"].as<std::string>());
+    rb.mass = node["mass"].as<float>();
+    rb.useGravity = node["use_gravity"].as<bool>();
+    return true;
+  }
+};
+
+template <> struct convert<Ember::Component::Collider> {
+  static Node encode(const Ember::Component::Collider &c) {
+    Node node;
+    node["collider_type"] =
+        Ember::Utils::ToString<Ember::Component::Collider::ColliderType>(
+            c.colliderType);
+    node["offset"] = c.offset;
+    node["rotation"] = c.rotation;
+    node["half_extents"] = c.halfExtents;
+    node["radius"] = c.radius;
+    node["height"] = c.height;
+    node["is_trigger"] = c.isTrigger;
+    return node;
+  }
+  static bool decode(const Node &node, Ember::Component::Collider &c) {
+    c.colliderType = 
+        Ember::Utils::FromString<Ember::Component::Collider::ColliderType>(
+            node["collider_type"].as<std::string>());
+    c.offset = node["offset"].as<glm::vec3>();
+    c.rotation = node["rotation"].as<glm::quat>();
+    c.halfExtents = node["half_extents"].as<glm::vec3>();
+    c.radius = node["radius"].as<float>();
+    c.height = node["height"].as<float>();
+    c.isTrigger = node["is_trigger"].as<bool>();
+    return true;
+  }
+};
 } // namespace YAML

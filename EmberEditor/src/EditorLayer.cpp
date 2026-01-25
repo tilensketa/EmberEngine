@@ -57,7 +57,8 @@ EditorLayer::EditorLayer(ProjectManager &projectManager,
                    std::make_shared<ProjectPanel>(*mEditorContext),
                    std::make_shared<EditorPanel>(*mEditorContext),
                    std::make_shared<AssetRegistryPanel>(*mEditorContext),
-                   std::make_shared<MaterialEditorPanel>(*mEditorContext)};
+                   std::make_shared<MaterialEditorPanel>(*mEditorContext),
+                   std::make_shared<TopBarPanel>(*mEditorContext)};
 }
 
 EditorLayer::~EditorLayer() {

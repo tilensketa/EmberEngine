@@ -23,7 +23,12 @@ enum class EventType : uint8_t {
   PROJECT_OPEN,
   PROJECT_SAVE,
   PROJECT_CREATE,
-  PROJECT_CLOSE
+  PROJECT_CLOSE,
+
+  PHYSICS_START,
+  PHYSICS_STOP,
+  PHYSICS_UNPAUSE,
+  PHYSICS_PAUSE
 };
 class IEvent {
 public:

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Layers/LayerStack.h"
+#include "Layers/PhysicsLayer.h"
 #include "Layers/RenderLayer.h"
 #include "Project/Assets/AssetRegistry.h"
 #include "Project/ProjectManager.h"
@@ -22,7 +23,7 @@ public:
   ~Application();
 
   static Application &Get();
-  void DispatchEvent(Event::IEvent& event);
+  void DispatchEvent(Event::IEvent &event);
 
   void Run();
   void Stop();
@@ -35,8 +36,10 @@ protected:
   std::unique_ptr<AssetManager> mAssetManager;
   AssetRegistry mAssetRegistry;
 
+  std::shared_ptr<PhysicsLayer> mPhysicsLayer;
+
 private:
-  static Application* sInstance;
+  static Application *sInstance;
 };
 Application *CreateApplication();
 } // namespace Ember

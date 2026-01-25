@@ -33,6 +33,7 @@ private:
 
 private:
   std::unique_ptr<Shader> mShader;
+  std::unique_ptr<Shader> mFlatShader;
   ProjectManager& mProjectManager;
   AssetRegistry& mAssetRegistry;
   std::unique_ptr<UBO> mLightUBO;

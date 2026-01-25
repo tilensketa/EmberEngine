@@ -20,10 +20,13 @@ Application::Application(const ApplicationSpecification &specification) {
   EngineAssetLoader::LoadBuiltInAssets(*mAssetManager);
   mAssetRegistry.RegisterDomain(AssetDomain::Engine, mAssetManager.get());
   mProjectManager = std::make_unique<ProjectManager>(mAssetRegistry);
+
   mLayerStack = std::make_shared<LayerStack>();
   mRenderLayer =
       std::make_shared<RenderLayer>(*mProjectManager, mAssetRegistry);
   mLayerStack->PushLayer(mRenderLayer);
+  mPhysicsLayer = std::make_shared<PhysicsLayer>();
+  mLayerStack->PushLayer(mPhysicsLayer);
   sInstance = this;
 
   LOG_INFO("HELLO FROM EMBERENGINE");

@@ -16,7 +16,9 @@ namespace Inspector {
 template <typename Fn> bool DrawComponentUI(const char *name, Fn fn) {
   bool open = true;
   if (ImGui::CollapsingHeader(name, &open, ImGuiTreeNodeFlags_DefaultOpen)) {
+    ImGui::PushID(name);
     fn();
+    ImGui::PopID();
   }
   return !open;
 }
@@ -174,6 +176,48 @@ inline bool DrawComponent<Component::Light>(Component::Light &c,
     ImGui::ColorEdit3("Color", &c.color.r);
     ImGui::DragFloat("Intensity", &c.intensity, 0.1f, 0.0f, 100.0f);
     ImGui::DragFloat("Radius", &c.radius, 0.1f, 0.1f, 100.0f);
+  });
+}
+template <>
+inline bool DrawComponent<Component::Rigidbody>(Component::Rigidbody &c,
+                                                EditorContext &context) {
+  return DrawComponentUI(NAME(Component::Rigidbody), [&]() {
+    auto bodyNames = Utils::EnumTraits<Component::Rigidbody::BodyType>::Names;
+
+    int bodyType = static_cast<int>(c.bodyType);
+    ImGui::Combo("BodyType", &bodyType, bodyNames.data(),
+                 static_cast<int>(bodyNames.size()));
+    c.bodyType = static_cast<Component::Rigidbody::BodyType>(bodyType);
+
+    ImGui::DragFloat("Mass", &c.mass, 0.1f, 0.0f, 100.0f);
+    ImGui::Checkbox("UseGravity", &c.useGravity);
+  });
+}
+template <>
+inline bool DrawComponent<Component::Collider>(Component::Collider &c,
+                                               EditorContext &context) {
+  return DrawComponentUI(NAME(Component::Collider), [&]() {
+    auto colliderNames =
+        Utils::EnumTraits<Component::Collider::ColliderType>::Names;
+
+    int colliderType = static_cast<int>(c.colliderType);
+    ImGui::Combo("ColliderType", &colliderType, colliderNames.data(),
+                 static_cast<int>(colliderNames.size()));
+    c.colliderType =
+        static_cast<Component::Collider::ColliderType>(colliderType);
+
+    ImGui::DragFloat3("Offset", &c.offset[0], 0.1f, -10.0f, 10.0f);
+    ImGui::DragFloat4("Rotation", &c.rotation[0], 0.1f, 0.0f, 1.0f);
+
+    if (c.colliderType == Component::Collider::ColliderType::Box) {
+      ImGui::DragFloat3("HalfExtents", &c.halfExtents[0], 0.1f, 0.0f, 100.0f);
+    } else if (c.colliderType == Component::Collider::ColliderType::Sphere) {
+      ImGui::DragFloat("Radius", &c.radius);
+    } else if (c.colliderType == Component::Collider::ColliderType::Capsule) {
+      ImGui::DragFloat("Radius", &c.radius);
+      ImGui::DragFloat("Height", &c.height);
+    }
+    ImGui::Checkbox("IsTrigger", &c.isTrigger);
   });
 }
 } // namespace Inspector

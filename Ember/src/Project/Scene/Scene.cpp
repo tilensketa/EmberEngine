@@ -7,6 +7,21 @@ Scene::Scene() {
   mRegistry = std::make_unique<entt::registry>();
 }
 
+Scene::Scene(const Scene &other) {
+  mGuid = GUID(other.GetGuid().GetID() + 1);
+  mName = other.mName + "_copy";
+
+  mRegistry = std::make_unique<entt::registry>();
+  std::unordered_map<entt::entity, entt::entity> entityMap;
+
+  for (const auto &[oldEntity, guid] : other.mEntityGuids) {
+    entt::entity newEntity = mRegistry->create();
+    entityMap[oldEntity] = newEntity;
+    mEntityGuids[newEntity] = guid;
+  }
+  copyComponents<Component::AllComponents>(other, entityMap);
+}
+
 std::shared_ptr<Scene> Scene::Deserialize(const YAML::Node &node) {
   LOG_DEBUG("Scene::Deserialize");
   std::shared_ptr<Scene> scene = std::make_shared<Scene>();

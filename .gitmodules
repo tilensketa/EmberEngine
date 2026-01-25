@@ -32,3 +32,6 @@
 [submodule "EmberEditor/dependencies/portable-file-dialogs"]
 	path = EmberEditor/dependencies/portable-file-dialogs
 	url = https://github.com/samhocevar/portable-file-dialogs.git
+[submodule "Ember/dependencies/reactphysics3d"]
+	path = Ember/dependencies/reactphysics3d
+	url = https://github.com/DanielChappuis/reactphysics3d.git

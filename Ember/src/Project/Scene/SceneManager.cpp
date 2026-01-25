@@ -29,7 +29,7 @@ void SceneManager::SaveToProject(const std::filesystem::path &scenesFolder) {
     std::ofstream(path) << node;
   }
 }
-GUID SceneManager::CreateScene(const std::string& name) {
+GUID SceneManager::CreateScene(const std::string &name) {
   GUID sceneGuid = GUID();
 
   LOG_DEBUG("SceneManager::CreateScene: Creating scene with guid: {}",
@@ -53,15 +53,28 @@ void SceneManager::ChangeScene(const GUID &guid) {
     return;
   }
   auto it = mScenes.find(guid);
-  if (it != mScenes.end()) mCurrentSceneGUID = guid;
-}
-std::vector<GUID> SceneManager::GetSceneGUIDs() const {
-  std::vector<GUID> sceneGuids;
-  sceneGuids.reserve(mScenes.size());
-  for (const auto &[guid, scene] : mScenes) {
-    sceneGuids.push_back(guid);
+  if (it == mScenes.end()) {
+    LOG_WARN("SceneManager::ChangeScene: Trying to change scene with guid: {} "
+             "that is not in.",
+             guid);
+    return;
   }
-  return sceneGuids;
+  LOG_INFO("SceneManager::ChangeScene: Changing scene to guid: {}", guid);
+  mCurrentSceneGUID = guid;
+}
+GUID SceneManager::DuplicateCurrentScene() {
+  auto currentScene = GetCurrentScene();
+  if (!currentScene) {
+    return GUID::NONE();
+  }
+
+  auto newScene = std::make_shared<Scene>(*currentScene);
+  GUID newGuid = newScene->GetGuid();
+
+  mScenes.insert({newGuid, newScene});
+  ChangeScene(newGuid);
+
+  return newGuid;
 }
 
 } // namespace Ember

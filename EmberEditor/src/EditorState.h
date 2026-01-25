@@ -17,7 +17,6 @@ struct EditorState {
     // Editor Contols
     ImGuizmo::OPERATION currentOperation = ImGuizmo::TRANSLATE;
     ImGuizmo::MODE currentMode = ImGuizmo::WORLD;
-    bool simulationActive = false;
     // Editor camera
     Component::Transform camTransform;
     Component::Camera camCamera;

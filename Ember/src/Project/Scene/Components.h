@@ -13,6 +13,8 @@
 #include <glm/gtx/matrix_decompose.hpp>
 #include <glm/gtx/quaternion.hpp>
 
+#include <reactphysics3d/reactphysics3d.h>
+
 namespace Ember {
 namespace Component {
 struct Id {
@@ -41,7 +43,7 @@ struct Model {
   std::vector<GUID> materialOverrides;
 };
 struct Camera {
-  enum class Projection : uint8_t { Perspective = 0, Orthographic, COUNT };
+  enum class Projection : uint8_t { Perspective = 0, Orthographic };
   enum class ViewMode : uint8_t {
     Wireframe = 0,
     Solid,
@@ -51,8 +53,7 @@ struct Camera {
     Roughness,
     TexCoords,
     Rendered,
-    Debug,
-    COUNT
+    Debug
   };
 
   Projection projection = Projection::Perspective;
@@ -79,7 +80,7 @@ struct Camera {
 };
 
 struct Light {
-  enum class LightType : uint8_t { Point = 0, Directional, COUNT };
+  enum class LightType : uint8_t { Point = 0, Directional };
 
   LightType lightType = LightType::Point;
   glm::vec3 color = glm::vec3(1.0f);
@@ -87,7 +88,36 @@ struct Light {
   float radius = 5.0f;
 };
 
-using AllComponents = std::tuple<Id, Tag, Transform, Model, Camera, Light>;
+struct Rigidbody {
+  enum class BodyType : uint8_t { Static = 0, Dynamic, Kinematic };
+
+  BodyType bodyType = BodyType::Static;
+  float mass = 1.0f;
+  bool useGravity = true;
+
+  reactphysics3d::RigidBody *physicsBodyHandle = nullptr;
+};
+
+struct Collider {
+  enum class ColliderType : uint8_t {
+    Box = 0,
+    Sphere,
+    Capsule
+  }; // TODO add mesh
+
+  ColliderType colliderType = ColliderType::Box;
+  glm::vec3 offset = glm::vec3(0.0f);
+  glm::quat rotation = glm::quat(1, 0, 0, 0);
+
+  glm::vec3 halfExtents = glm::vec3(0.5f);
+  float radius = 0.5f;
+  float height = 1.0f;
+
+  bool isTrigger = false;
+};
+
+using AllComponents =
+    std::tuple<Id, Tag, Transform, Model, Camera, Light, Rigidbody, Collider>;
 
 #define REGISTER_COMPONENT_NAME(TYPE, NAME)                                    \
   template <> constexpr const char *ComponentName<TYPE>() { return NAME; }
@@ -100,6 +130,8 @@ REGISTER_COMPONENT_NAME(Component::Transform, "Transform")
 REGISTER_COMPONENT_NAME(Component::Model, "Model")
 REGISTER_COMPONENT_NAME(Component::Camera, "Camera")
 REGISTER_COMPONENT_NAME(Component::Light, "Light")
+REGISTER_COMPONENT_NAME(Component::Rigidbody, "Rigidbody")
+REGISTER_COMPONENT_NAME(Component::Collider, "Collider")
 } // namespace Component
 } // namespace Ember
 
@@ -116,5 +148,13 @@ template <> struct EnumTraits<Component::Camera::ViewMode> {
 template <> struct EnumTraits<Component::Light::LightType> {
   inline static constexpr std::array<const char *, 2> Names = {"Point",
                                                                "Directional"};
+};
+template <> struct EnumTraits<Component::Rigidbody::BodyType> {
+  inline static constexpr std::array<const char *, 3> Names = {
+      "Static", "Dynamic", "Kinematic"};
+};
+template <> struct EnumTraits<Component::Collider::ColliderType> {
+  inline static constexpr std::array<const char *, 3> Names = {"Box", "Sphere",
+                                                               "Capsule"};
 };
 } // namespace Ember::Utils

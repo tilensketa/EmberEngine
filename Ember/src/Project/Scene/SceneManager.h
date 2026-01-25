@@ -20,7 +20,7 @@ public:
     return (mCurrentSceneGUID) ? mScenes[*mCurrentSceneGUID] : nullptr;
   }
   void ChangeScene(const GUID &guid);
-  std::vector<GUID> GetSceneGUIDs() const;
+  GUID DuplicateCurrentScene();
 
 private:
   std::optional<GUID> mCurrentSceneGUID = std::nullopt;

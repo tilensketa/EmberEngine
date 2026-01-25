@@ -29,7 +29,7 @@ private:
 
 private:
   ProjectManager &mProjectManager;
-  std::array<std::shared_ptr<IEditorPanel>, 8> mEditorPanels;
+  std::array<std::shared_ptr<IEditorPanel>, 9> mEditorPanels;
   std::unique_ptr<EditorState> mEditorState = nullptr;
   std::unique_ptr<AssetManager> mAssetManager;
   AssetRegistry &mAssetRegistry;

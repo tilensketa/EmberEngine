@@ -7,6 +7,7 @@
 #include "Core/Serialization.h"
 
 #include <entt/entt.hpp>
+#include <reactphysics3d/reactphysics3d.h>
 
 namespace Ember {
 struct EntityHandle {
@@ -21,6 +22,7 @@ struct EntityHandle {
 class Scene {
 public:
   Scene();
+  Scene(const Scene &other);
   ~Scene() = default;
 
   static std::shared_ptr<Scene> Deserialize(const YAML::Node &node);
@@ -50,6 +52,23 @@ public:
         node[name] = component;
       }
       SerializeComponents<Tuple, Index + 1>(node, handle);
+    }
+  }
+
+  template <typename Tuple, std::size_t Index = 0>
+  void copyComponents(
+      const Scene &other,
+      const std::unordered_map<entt::entity, entt::entity> &entityMap) {
+    if constexpr (Index < std::tuple_size_v<Tuple>) {
+      using ComponentType = std::tuple_element_t<Index, Tuple>;
+      auto view = other.mRegistry->view<ComponentType>();
+      for (auto oldEntity : view) {
+        auto newEntity = entityMap.at(oldEntity);
+        auto &component = other.mRegistry->get<ComponentType>(oldEntity);
+
+        mRegistry->emplace<ComponentType>(newEntity, component);
+      }
+      copyComponents<Tuple, Index + 1>(other, entityMap);
     }
   }
 
@@ -104,11 +123,18 @@ public:
     mRegistry->remove<T>(handle.entity);
   }
 
+  void SetPhysicsWorld(reactphysics3d::PhysicsWorld *world) {
+    mPhysicsWorld = world;
+  }
+  reactphysics3d::PhysicsWorld *GetPhysicsWorld() { return mPhysicsWorld; }
+
 private:
   GUID mGuid = GUID::NONE();
   std::string mName = "default_scene";
-  std::unique_ptr<entt::registry> mRegistry;
+  std::unique_ptr<entt::registry> mRegistry = nullptr;
   std::unordered_map<entt::entity, GUID> mEntityGuids;
+
+  reactphysics3d::PhysicsWorld *mPhysicsWorld = nullptr;
 };
 } // namespace Ember
 

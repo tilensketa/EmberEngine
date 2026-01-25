@@ -17,6 +17,7 @@ set(SOURCES
   src/EditorPanels/AssetRegistryPanel/AssetRegistryPanel.cpp
   src/EditorPanels/MaterialEditorPanel/MaterialEditorPanel.cpp
   src/EditorPanels/GameViewPanel/GameViewPanel.cpp
+  src/EditorPanels/TopBarPanel/TopBarPanel.cpp
 )
 
 add_executable(EmberEditor ${SOURCES})

@@ -17,6 +17,7 @@ Renderer::Renderer(ProjectManager &projectManager, AssetRegistry &assetRegistry)
     : mProjectManager(projectManager), mAssetRegistry(assetRegistry) {
   LOG_INFO("Renderer::Init: Initializing renderer");
   mShader = std::make_unique<Shader>(SHADERS, "shader.vert", "shader.frag");
+  mFlatShader = std::make_unique<Shader>(SHADERS, "flat.vert", "flat.frag");
   mLightUBO = std::make_unique<UBO>(sizeof(LightBlockCPU), 0);
 }
 
@@ -122,6 +123,45 @@ void Renderer::Render(const RenderContext &ctx) {
         mesh.gpu.vao->Unbind();
       }
     }
+    // COLLIDERS
+    // TODO seperate functions
+    auto colliderView =
+        ctx.scene->View<Component::Transform, Component::Collider>();
+    mFlatShader->Activate();
+    mFlatShader->SetMat4("uCamMatrix", cameraMatrix);
+    mFlatShader->SetVec3("uFlatColor", glm::vec3(0, 1, 1));
+    glLineWidth(5.0f);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    for (const auto entity : colliderView) {
+      const auto &transform = ctx.scene->Get<Component::Transform>(entity);
+      const auto &collider = ctx.scene->Get<Component::Collider>(entity);
+      auto colliderTransform = Component::Transform();
+      colliderTransform.position = collider.offset;
+      colliderTransform.rotation = collider.rotation;
+
+      AssetHandle handle = AssetHandle::NONE();
+      if (collider.colliderType == Component::Collider::ColliderType::Box) {
+        handle = EngineAssetLoader::GetCubeHandle();
+      } else if (collider.colliderType ==
+                 Component::Collider::ColliderType::Sphere) {
+        handle = EngineAssetLoader::GetSphereHandle();
+      } else if (collider.colliderType ==
+                 Component::Collider::ColliderType::Capsule) {
+        // TODO make capsule mesh
+        handle = EngineAssetLoader::GetCylinderHandle();
+      }
+      auto model = mAssetRegistry.GetAsset<Asset::Model>(handle.guid);
+      if (!model) continue;
+
+      mFlatShader->SetMat4("uModel", transform.GetMatrix() *
+                                         colliderTransform.GetMatrix());
+      model->meshes[0].gpu.vao->Bind();
+      glDrawElements(GL_TRIANGLES, model->meshes[0].gpu.indexCount,
+                     GL_UNSIGNED_INT, 0);
+      model->meshes[0].gpu.vao->Unbind();
+    }
+    glLineWidth(1.0f);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   }
   ctx.renderTarget->Unbind();
 }
