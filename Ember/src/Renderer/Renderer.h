@@ -28,14 +28,18 @@ public:
   void Render(const RenderContext &ctx);
 
 private:
+  void collectLights(const RenderContext &ctx);
+  void renderModels(const RenderContext &ctx, Shader* shader);
+  void renderLights(const RenderContext &ctx, Shader* shader);
+  void renderColliders(const RenderContext &ctx, Shader* shader);
   void bindTexture(const GUID &guid, const GLenum &textureId,
                    const std::string &name);
 
 private:
   std::unique_ptr<Shader> mShader;
   std::unique_ptr<Shader> mFlatShader;
-  ProjectManager& mProjectManager;
-  AssetRegistry& mAssetRegistry;
+  ProjectManager &mProjectManager;
+  AssetRegistry &mAssetRegistry;
   std::unique_ptr<UBO> mLightUBO;
 };
 } // namespace Ember

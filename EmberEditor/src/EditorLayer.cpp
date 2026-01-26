@@ -20,6 +20,7 @@ EditorLayer::EditorLayer(ProjectManager &projectManager,
   mEditorState = std::make_unique<EditorState>();
   mEditorState->temporary.selectedFolder =
       mProjectManager.GetProjectDirectories().root;
+  mEditorState->temporary.camTransform.position = glm::vec3(10,0,0);
   mAssetManager = std::make_unique<AssetManager>("");
   EditorAssetLoader::LoadEditorAssets(*mAssetManager);
 
