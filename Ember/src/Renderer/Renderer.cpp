@@ -104,7 +104,7 @@ void Renderer::renderLights(const RenderContext &ctx, Shader *shader) {
 
     AssetHandle handle = AssetHandle::NONE();
     if (light.lightType == Component::Light::LightType::Point) {
-      handle = EngineAssetLoader::GetSphereHandle();
+      handle = EngineAssetLoader::GetPrimitive(EnginePrimitive::Sphere);
     }
     // TODO visualisation for directional light
     if (handle == AssetHandle::NONE()) continue;
@@ -170,7 +170,7 @@ void Renderer::renderColliders(const RenderContext &ctx, Shader *shader) {
   glLineWidth(5.0f);
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   for (const auto entity : colliderView) {
-    const auto &transform = ctx.scene->Get<Component::Transform>(entity);
+    auto transform = ctx.scene->Get<Component::Transform>(entity);
     const auto &collider = ctx.scene->Get<Component::Collider>(entity);
     auto colliderTransform = Component::Transform();
     colliderTransform.position = collider.offset;
@@ -178,14 +178,20 @@ void Renderer::renderColliders(const RenderContext &ctx, Shader *shader) {
 
     AssetHandle handle = AssetHandle::NONE();
     if (collider.colliderType == Component::Collider::ColliderType::Box) {
-      handle = EngineAssetLoader::GetCubeHandle();
+      handle = EngineAssetLoader::GetPrimitive(EnginePrimitive::Cube);
+      colliderTransform.scale = collider.boxScale;
     } else if (collider.colliderType ==
                Component::Collider::ColliderType::Sphere) {
-      handle = EngineAssetLoader::GetSphereHandle();
+      handle = EngineAssetLoader::GetPrimitive(EnginePrimitive::Sphere);
+      colliderTransform.scale = glm::vec3(collider.radius);
+      transform.scale = glm::vec3(glm::compMax(transform.scale));
     } else if (collider.colliderType ==
                Component::Collider::ColliderType::Capsule) {
-      // TODO make capsule mesh
-      handle = EngineAssetLoader::GetCylinderHandle();
+      handle = EngineAssetLoader::GetPrimitive(EnginePrimitive::Capsule);
+      colliderTransform.scale =
+          glm::vec3(collider.radius, collider.radius, collider.height * 0.5f);
+      float maxRadius = glm::max(transform.scale.x, transform.scale.y);
+      transform.scale = glm::vec3(maxRadius, maxRadius, transform.scale.z);
     }
     auto model = mAssetRegistry.GetAsset<Asset::Model>(handle.guid);
     if (!model) continue;

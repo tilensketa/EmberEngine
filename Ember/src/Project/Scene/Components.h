@@ -109,9 +109,9 @@ struct Collider {
   glm::vec3 offset = glm::vec3(0.0f);
   glm::quat rotation = glm::quat(1, 0, 0, 0);
 
-  glm::vec3 halfExtents = glm::vec3(0.5f);
-  float radius = 0.5f;
-  float height = 1.0f;
+  glm::vec3 boxScale = glm::vec3(1.0f);
+  float radius = 1.0f;
+  float height = 2.0f;
 
   bool isTrigger = false;
 };

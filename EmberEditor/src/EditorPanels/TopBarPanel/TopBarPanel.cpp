@@ -10,6 +10,7 @@ void TopBarPanel::Update() {
   if (ImGui::Button("Start")) {
     auto &sceneManager = mCtx.projectManager.GetSceneManager();
     auto newGuid = sceneManager.DuplicateCurrentScene();
+    mCtx.editorState.temporary.selectedEntityHandle = std::nullopt;
 
     Event::PhysicsStart event(sceneManager.GetCurrentScene());
     Application::Get().DispatchEvent(event);
@@ -30,6 +31,7 @@ void TopBarPanel::Update() {
     auto guid = sceneManager.GetCurrentScene()->GetGuid();
     sceneManager.RemoveScene(guid);
     sceneManager.ChangeScene(GUID(guid.GetID() - 1));
+    mCtx.editorState.temporary.selectedEntityHandle = std::nullopt;
 
     Event::PhysicsStop event;
     Application::Get().DispatchEvent(event);

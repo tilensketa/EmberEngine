@@ -57,33 +57,22 @@ void HierarchyPanel::OnEvent(Ember::Event::IEvent &event) {};
 void HierarchyPanel::handleAddMenu(std::shared_ptr<Scene> scene) {
   if (ImGui::BeginPopupContextWindow("HierarchyAddPopup",
                                      ImGuiPopupFlags_MouseButtonRight)) {
-    auto &selectedEntityHandle = mCtx.editorState.temporary.selectedEntityHandle;
+    auto &selectedEntityHandle =
+        mCtx.editorState.temporary.selectedEntityHandle;
 
     ImGui::Text("ADD");
     ImGui::Separator();
 
     if (ImGui::BeginMenu("Model")) {
-      if (ImGui::MenuItem("Cube")) {
-        EntityHandle e = scene->CreateEntity("PrimitiveCube");
-        scene->AddComponent<Component::Model>(
-            e, {EngineAssetLoader::GetCubeHandle(), {GUID::NONE()}});
-        selectedEntityHandle = e;
+      for (auto desc : sEnginePrimitives) {
+        if (ImGui::MenuItem(desc.name)) {
+          EntityHandle e = scene->CreateEntity(desc.name);
+          scene->AddComponent<Component::Model>(
+              e, {EngineAssetLoader::GetPrimitive(desc.primitive),
+                  {GUID::NONE()}});
+          selectedEntityHandle = e;
+        }
       }
-
-      if (ImGui::MenuItem("Sphere")) {
-        EntityHandle e = scene->CreateEntity("PrimitiveSphere");
-        scene->AddComponent<Component::Model>(
-            e, {EngineAssetLoader::GetSphereHandle(), {GUID::NONE()}});
-        selectedEntityHandle = e;
-      }
-
-      if (ImGui::MenuItem("Cylinder")) {
-        EntityHandle e = scene->CreateEntity("PrimitiveCylinder");
-        scene->AddComponent<Component::Model>(
-            e, {EngineAssetLoader::GetCylinderHandle(), {GUID::NONE()}});
-        selectedEntityHandle = e;
-      }
-
       ImGui::EndMenu();
     }
 
@@ -98,7 +87,7 @@ void HierarchyPanel::handleAddMenu(std::shared_ptr<Scene> scene) {
     if (ImGui::BeginMenu("Camera")) {
       if (ImGui::MenuItem("Camera")) {
         EntityHandle e = scene->CreateEntity("Camera");
-	scene->AddComponent<Component::Camera>(e);
+        scene->AddComponent<Component::Camera>(e);
         selectedEntityHandle = e;
       }
       ImGui::EndMenu();

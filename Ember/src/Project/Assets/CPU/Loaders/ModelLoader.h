@@ -10,9 +10,14 @@ namespace Ember {
 namespace ModelLoader {
 struct ImportSettings {};
 
+CPUAsset::ModelData CreatePlane();
 CPUAsset::ModelData CreateCube();
 CPUAsset::ModelData CreateSphere();
+CPUAsset::ModelData CreateCircle();
 CPUAsset::ModelData CreateCylinder();
+CPUAsset::ModelData CreateCapsule();
+CPUAsset::ModelData CreateCone();
+CPUAsset::ModelData CreatePyramid();
 
 std::optional<CPUAsset::ModelData> FromFile(const std::filesystem::path &path);
 

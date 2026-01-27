@@ -34,8 +34,9 @@ void MaterialEditorPanel::Update() {
 
   ImGui::Text("Material: %s", matHandle.path.c_str());
   bool changed = false;
-  ImGui::BeginDisabled(matGuid ==
-                       EngineAssetLoader::GetDefaultMaterialHandle().guid);
+  ImGui::BeginDisabled(
+      matGuid ==
+      EngineAssetLoader::GetMaterial(EngineMaterial::DefaultMaterial).guid);
 
   if (ImGui::CollapsingHeader("Albedo", ImGuiTreeNodeFlags_DefaultOpen)) {
     changed |= ImGui::ColorEdit3("Color", &mat.factors.albedoColor.x);
@@ -82,7 +83,7 @@ bool MaterialEditorPanel::handleTexture(const std::string &name, GUID &guid) {
     return false;
   }
 
-  ImGui::PushStyleColor(ImGuiCol_Button, {0,0,0,0});
+  ImGui::PushStyleColor(ImGuiCol_Button, {0, 0, 0, 0});
   if (ImGui::ImageButton("##img", (ImTextureID)(intptr_t)texture->gpu.id,
                          ImVec2(150.0f, 150.0f))) {
     ImGui::OpenPopup("TextureSelector");

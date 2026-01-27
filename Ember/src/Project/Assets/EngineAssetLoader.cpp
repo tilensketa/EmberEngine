@@ -6,61 +6,31 @@
 
 namespace Ember {
 
-AssetHandle EngineAssetLoader::sPrimitiveCubeHandle;
-AssetHandle EngineAssetLoader::sPrimitiveSphereHandle;
-AssetHandle EngineAssetLoader::sPrimitiveCylinderHandle;
+std::unordered_map<EnginePrimitive, AssetHandle> EngineAssetLoader::sPrimitives;
+std::unordered_map<EngineMaterial, AssetHandle> EngineAssetLoader::sMaterials;
 
-AssetHandle EngineAssetLoader::sDefaultMaterialHandle;
-
-// TODO don't modify asset pool
 void EngineAssetLoader::LoadBuiltInAssets(AssetManager &assetManager) {
-  { // Default Material
-    sDefaultMaterialHandle = AssetHandle(
-        AssetType::MATERIAL, BuiltInAssets::DefaultMaterial, "DefaultMaterial");
-    Asset::Material mat;
-    AssetMeta assetMeta;
-    assetMeta.handle = sDefaultMaterialHandle;
-    assetMeta.importSettings = MaterialLoader::ImportSettings();
+  for (const auto &desc : sEngineMaterials) {
+    const GUID guid = EngineMaterialGuid(desc.material);
+    AssetHandle handle(AssetType::MATERIAL, guid, desc.name);
+
+    AssetMeta assetMeta(handle, MaterialLoader::ImportSettings());
     assetManager.RegisterAssetMeta(assetMeta);
     assetManager.GetAssetPool().StoreAsset(
-        sDefaultMaterialHandle, std::make_shared<Asset::Material>(mat));
+        handle, std::make_shared<Asset::Material>(Asset::Material()));
+    sMaterials.emplace(desc.material, handle);
   }
-  { // Primitive Cube
-    CPUAsset::ModelData cpuData = ModelLoader::CreateCube();
-    Asset::Model model = generateModel(cpuData);
+  for (const auto &desc : sEnginePrimitives) {
+    const GUID guid = EnginePrimitiveGuid(desc.primitive);
+    AssetHandle handle(AssetType::MODEL, guid, desc.name);
 
-    sPrimitiveCubeHandle = AssetHandle(
-        AssetType::MODEL, BuiltInAssets::PrimitiveCube, "PrimitiveCube");
-    AssetMeta assetMeta(sPrimitiveCubeHandle, ModelLoader::ImportSettings());
+    auto model = generateModel(desc.modelData);
 
+    AssetMeta assetMeta(handle, ModelLoader::ImportSettings());
     assetManager.RegisterAssetMeta(assetMeta);
     assetManager.GetAssetPool().StoreAsset(
-        sPrimitiveCubeHandle, std::make_shared<Asset::Model>(model));
-  }
-  { // Primitive Sphere
-    CPUAsset::ModelData cpuData = ModelLoader::CreateSphere();
-    Asset::Model model = generateModel(cpuData);
-
-    sPrimitiveSphereHandle = AssetHandle(
-        AssetType::MODEL, BuiltInAssets::PrimitiveSphere, "PrimitiveSphere");
-    AssetMeta assetMeta(sPrimitiveSphereHandle, ModelLoader::ImportSettings());
-
-    assetManager.RegisterAssetMeta(assetMeta);
-    assetManager.GetAssetPool().StoreAsset(
-        sPrimitiveSphereHandle, std::make_shared<Asset::Model>(model));
-  }
-  { // Primitive Cylinder
-    CPUAsset::ModelData cpuData = ModelLoader::CreateCylinder();
-    Asset::Model model = generateModel(cpuData);
-
-    sPrimitiveCylinderHandle =
-        AssetHandle(AssetType::MODEL, BuiltInAssets::PrimitiveCylinder,
-                    "PrimitiveCylinder");
-    AssetMeta assetMeta(sPrimitiveCylinderHandle, ModelLoader::ImportSettings());
-
-    assetManager.RegisterAssetMeta(assetMeta);
-    assetManager.GetAssetPool().StoreAsset(
-        sPrimitiveCylinderHandle, std::make_shared<Asset::Model>(model));
+        handle, std::make_shared<Asset::Model>(model));
+    sPrimitives.emplace(desc.primitive, handle);
   }
 }
 
@@ -69,7 +39,7 @@ EngineAssetLoader::generateModel(const CPUAsset::ModelData &modelData) {
   ModelBinaryLoader::ModelBinaryData modelBinaryData;
   for (size_t i = 0; i < modelData.meshes.size(); i++) {
     ModelBinaryLoader::MeshBinaryData meshBinaryData;
-    meshBinaryData.material = sDefaultMaterialHandle.guid;
+    meshBinaryData.material = EngineMaterialGuid(EngineMaterial::DefaultMaterial);
     meshBinaryData.vertices = modelData.meshes[i].vertices;
     meshBinaryData.indices = modelData.meshes[i].indices;
     modelBinaryData.meshes.push_back(meshBinaryData);

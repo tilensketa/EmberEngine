@@ -1,0 +1,128 @@
+guid: 363710546759627665
+name: 3dmodel_scene
+entities:
+  - Id: 14746246191602756968
+    Tag: Camera
+    Transform:
+      position:
+        - 5.2047105
+        - 2.12454
+        - 1.370699
+      rotation:
+        - 0.01748213
+        - -0.08607315
+        - 0.19827385
+        - 0.9762035
+      scale:
+        - 0.9999989
+        - 0.99999917
+        - 0.99999976
+    Camera:
+      projection: Perspective
+      view_mode: Rendered
+      resolution:
+        - 1920
+        - 1080
+      ortho_size: 2
+      near: 0.1
+      far: 100000
+      fov: 45
+      active: true
+  - Id: 2415150390092564782
+    Tag: PointLight
+    Transform:
+      position:
+        - 6.055257
+        - 1.4374058
+        - 3.2776406
+      rotation:
+        - 0
+        - 0
+        - 0
+        - 1
+      scale:
+        - 15.8
+        - 15.8
+        - 15.8
+    Light:
+      light_type: Point
+      color:
+        - 1
+        - 1
+        - 1
+      intensity: 15.8
+      radius: 15.8
+  - Id: 11623398417493943348
+    Tag: Cube
+    Transform:
+      position:
+        - 0
+        - 0
+        - 0
+      rotation:
+        - 0
+        - 0
+        - 0
+        - 1
+      scale:
+        - 1
+        - 1
+        - 1
+    Model:
+      model:
+        type: Model
+        guid: 8525917840034386501
+        path: Models/box/box.obj
+      material_overrides:
+        - 0
+  - Id: 4562366399232504409
+    Tag: Character
+    Transform:
+      position:
+        - 0
+        - 2.2773438
+        - -1.0791016
+      rotation:
+        - 0
+        - 0
+        - 0.39464492
+        - 0.91883373
+      scale:
+        - 0.99999964
+        - 0.99999964
+        - 1
+    Model:
+      model:
+        type: Model
+        guid: 11002183111843605765
+        path: Models/character-a/character-a.obj
+      material_overrides:
+        - 0
+        - 0
+        - 0
+        - 0
+        - 0
+        - 0
+  - Id: 14834412967950759591
+    Tag: Plane
+    Transform:
+      position:
+        - 0
+        - 0
+        - -1.1186523
+      rotation:
+        - 0
+        - 0
+        - 0
+        - 1
+      scale:
+        - 23.5081
+        - 23.5081
+        - 23.5081
+    Model:
+      model:
+        type: Model
+        guid: 1
+        path: Plane
+      material_overrides:
+        - 10473287494837267733

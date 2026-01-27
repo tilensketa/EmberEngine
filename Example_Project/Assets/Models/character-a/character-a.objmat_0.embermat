@@ -1,0 +1,11 @@
+albedo_color:
+  - 0.6
+  - 0.6
+  - 0.6
+emission: 0
+metalness: 0
+roughness: 1
+albedo_map: 0
+normal_map: 0
+metalness_map: 0
+roughness_map: 0

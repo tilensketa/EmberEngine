@@ -21,6 +21,7 @@ EditorLayer::EditorLayer(ProjectManager &projectManager,
   mEditorState->temporary.selectedFolder =
       mProjectManager.GetProjectDirectories().root;
   mEditorState->temporary.camTransform.position = glm::vec3(10,0,0);
+  mEditorState->temporary.camCamera.viewMode = Component::Camera::ViewMode::Debug;
   mAssetManager = std::make_unique<AssetManager>("");
   EditorAssetLoader::LoadEditorAssets(*mAssetManager);
 

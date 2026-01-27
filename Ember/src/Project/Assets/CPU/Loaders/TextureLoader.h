@@ -33,7 +33,7 @@ struct ImportSettings {
 
   TextureType textureType = TextureType::Albedo;
   FilterType filterType = FilterType::Linear;
-  WrapType wrapType = WrapType::ClampToEdge;
+  WrapType wrapType = WrapType::Repeat;
   bool generateMipmaps = false;
 };
 

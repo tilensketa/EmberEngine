@@ -8,102 +8,168 @@
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 
+#define RESOLUTION 16
+
 namespace Ember::ModelLoader {
+
+// ---------------------- Helpers ----------------------
+static void buildBasis(const glm::vec3 &n, glm::vec3 &t, glm::vec3 &b) {
+  glm::vec3 up =
+      (std::abs(n.z) < 0.999f) ? glm::vec3(0, 0, 1) : glm::vec3(0, 1, 0);
+  t = glm::normalize(glm::cross(up, n));
+  b = glm::normalize(glm::cross(n, t));
+}
+
+void addQuad(CPUAsset::MeshData &mesh, float size, const glm::vec3 &pos,
+             const glm::vec3 &normal) {
+  glm::vec3 n = glm::normalize(normal);
+  glm::vec3 t, b;
+  buildBasis(n, t, b);
+  float h = size * 0.5f;
+  uint32_t base = mesh.vertices.size();
+
+  mesh.vertices.push_back({pos + (-t - b) * h, n, {0, 0}, t});
+  mesh.vertices.push_back({pos + (t - b) * h, n, {1, 0}, t});
+  mesh.vertices.push_back({pos + (t + b) * h, n, {1, 1}, t});
+  mesh.vertices.push_back({pos + (-t + b) * h, n, {0, 1}, t});
+
+  mesh.indices.insert(mesh.indices.end(),
+                      {base, base + 1, base + 2, base, base + 2, base + 3});
+}
+
+void addDisk(CPUAsset::MeshData &mesh, float radius, const glm::vec3 &pos,
+             const glm::vec3 &normal, uint32_t slices = 32) {
+  glm::vec3 n = glm::normalize(normal);
+  glm::vec3 t, b;
+  buildBasis(n, t, b);
+
+  uint32_t centerIndex = mesh.vertices.size();
+  mesh.vertices.push_back({pos, n, {0.5f, 0.5f}, t});
+
+  for (uint32_t i = 0; i <= slices; i++) {
+    float theta = float(i) / slices * glm::two_pi<float>();
+    float cx = std::cos(theta);
+    float cy = std::sin(theta);
+    glm::vec3 offset = (t * cx + b * cy) * radius;
+
+    mesh.vertices.push_back(
+        {pos + offset, n, {cx * 0.5f + 0.5f, cy * 0.5f + 0.5f}, t});
+  }
+
+  for (uint32_t i = 0; i < slices; i++) {
+    mesh.indices.insert(mesh.indices.end(), {centerIndex, centerIndex + i + 1,
+                                             centerIndex + i + 2});
+  }
+}
+
+void addCylinderSide(CPUAsset::MeshData &mesh, float radius, float height,
+                     uint32_t slices = 32) {
+  float halfH = height * 0.5f;
+  uint32_t baseIndex = mesh.vertices.size();
+
+  for (uint32_t i = 0; i <= slices; i++) {
+    float theta = float(i) / slices * glm::two_pi<float>();
+    float x = std::cos(theta);
+    float y = std::sin(theta);
+    glm::vec3 normal{x, y, 0};
+    glm::vec3 tangent{-y, x, 0};
+
+    mesh.vertices.push_back({{radius * x, radius * y, -halfH},
+                             normal,
+                             {float(i) / slices, 0},
+                             tangent});
+    mesh.vertices.push_back({{radius * x, radius * y, halfH},
+                             normal,
+                             {float(i) / slices, 1},
+                             tangent});
+  }
+
+  for (uint32_t i = 0; i < slices; i++) {
+    uint32_t b = baseIndex + i * 2;
+    mesh.indices.insert(mesh.indices.end(),
+                        {b, b + 1, b + 2, b + 2, b + 1, b + 3});
+  }
+}
+
+void addHemisphere(CPUAsset::MeshData &mesh, float radius, float centerZ,
+                   float sign = 1.0f, uint32_t slices = 32,
+                   uint32_t stacks = 16) {
+  uint32_t base = mesh.vertices.size();
+
+  for (uint32_t y = 0; y <= stacks; y++) {
+    float v = float(y) / stacks;
+    float phi = v * glm::half_pi<float>();
+    float r = std::cos(phi) * radius;
+    float z = centerZ + sign * std::sin(phi) * radius;
+
+    for (uint32_t i = 0; i <= slices; i++) {
+      float theta = float(i) / slices * glm::two_pi<float>();
+      float x = std::cos(theta);
+      float y = std::sin(theta);
+
+      glm::vec3 normal = glm::normalize(glm::vec3(x, y, sign * std::sin(phi)));
+      glm::vec3 tangent{-y, x, 0};
+
+      mesh.vertices.push_back(
+          {{r * x, r * y, z}, normal, {float(i) / slices, v}, tangent});
+    }
+
+    if (y > 0) {
+      uint32_t prev = base + (y - 1) * (slices + 1);
+      uint32_t curr = base + y * (slices + 1);
+      for (uint32_t i = 0; i < slices; i++) {
+        mesh.indices.insert(mesh.indices.end(),
+                            {prev + i, curr + i, prev + i + 1, prev + i + 1,
+                             curr + i, curr + i + 1});
+      }
+    }
+  }
+}
+
+// ---------------------- Primitives ----------------------
+
+CPUAsset::ModelData CreatePlane() {
+  CPUAsset::MeshData mesh;
+  mesh.materialIndex = 0;
+  addQuad(mesh, 1.0f, {0, 0, 0}, {0, 0, 1});
+  CPUAsset::ModelData model;
+  model.meshes.push_back(mesh);
+  return model;
+}
+
+CPUAsset::ModelData CreateCircle() {
+  CPUAsset::MeshData mesh;
+  mesh.materialIndex = 0;
+  addDisk(mesh, 0.5f, {0, 0, 0}, {0, 0, 1});
+  CPUAsset::ModelData model;
+  model.meshes.push_back(mesh);
+  return model;
+}
 
 CPUAsset::ModelData CreateCube() {
   CPUAsset::MeshData mesh;
   mesh.materialIndex = 0;
-
   const float h = 0.5f;
-
-  mesh.vertices = {
-      // +X face
-      {{h, -h, -h}, {1, 0, 0}, {0, 0}, {0, 0, -1}},
-      {{h, h, -h}, {1, 0, 0}, {1, 0}, {0, 0, -1}},
-      {{h, h, h}, {1, 0, 0}, {1, 1}, {0, 0, -1}},
-      {{h, -h, h}, {1, 0, 0}, {0, 1}, {0, 0, -1}},
-
-      // -X face
-      {{-h, -h, h}, {-1, 0, 0}, {0, 0}, {0, 0, 1}},
-      {{-h, h, h}, {-1, 0, 0}, {1, 0}, {0, 0, 1}},
-      {{-h, h, -h}, {-1, 0, 0}, {1, 1}, {0, 0, 1}},
-      {{-h, -h, -h}, {-1, 0, 0}, {0, 1}, {0, 0, 1}},
-
-      // +Y face
-      {{-h, h, -h}, {0, 1, 0}, {0, 0}, {1, 0, 0}},
-      {{-h, h, h}, {0, 1, 0}, {0, 1}, {1, 0, 0}},
-      {{h, h, h}, {0, 1, 0}, {1, 1}, {1, 0, 0}},
-      {{h, h, -h}, {0, 1, 0}, {1, 0}, {1, 0, 0}},
-
-      // -Y face
-      {{-h, -h, h}, {0, -1, 0}, {0, 0}, {1, 0, 0}},
-      {{-h, -h, -h}, {0, -1, 0}, {0, 1}, {1, 0, 0}},
-      {{h, -h, -h}, {0, -1, 0}, {1, 1}, {1, 0, 0}},
-      {{h, -h, h}, {0, -1, 0}, {1, 0}, {1, 0, 0}},
-
-      // +Z face
-      {{-h, -h, h}, {0, 0, 1}, {0, 0}, {1, 0, 0}},
-      {{h, -h, h}, {0, 0, 1}, {1, 0}, {1, 0, 0}},
-      {{h, h, h}, {0, 0, 1}, {1, 1}, {1, 0, 0}},
-      {{-h, h, h}, {0, 0, 1}, {0, 1}, {1, 0, 0}},
-
-      // -Z face
-      {{h, -h, -h}, {0, 0, -1}, {0, 0}, {-1, 0, 0}},
-      {{-h, -h, -h}, {0, 0, -1}, {1, 0}, {-1, 0, 0}},
-      {{-h, h, -h}, {0, 0, -1}, {1, 1}, {-1, 0, 0}},
-      {{h, h, -h}, {0, 0, -1}, {0, 1}, {-1, 0, 0}},
-  };
-
-  mesh.indices = {
-      0,  1,  2,  0,  2,  3,  // +X
-      4,  5,  6,  4,  6,  7,  // -X
-      8,  9,  10, 8,  10, 11, // +Y
-      12, 13, 14, 12, 14, 15, // -Y
-      16, 17, 18, 16, 18, 19, // +Z
-      20, 21, 22, 20, 22, 23  // -Z
-  };
-
-  CPUAsset::ModelData modelData;
-  modelData.meshes.push_back(mesh);
-  return modelData;
+  // +X, -X, +Y, -Y, +Z, -Z faces
+  addQuad(mesh, 1.0f, {h, 0, 0}, {1, 0, 0});
+  addQuad(mesh, 1.0f, {-h, 0, 0}, {-1, 0, 0});
+  addQuad(mesh, 1.0f, {0, h, 0}, {0, 1, 0});
+  addQuad(mesh, 1.0f, {0, -h, 0}, {0, -1, 0});
+  addQuad(mesh, 1.0f, {0, 0, h}, {0, 0, 1});
+  addQuad(mesh, 1.0f, {0, 0, -h}, {0, 0, -1});
+  CPUAsset::ModelData model;
+  model.meshes.push_back(mesh);
+  return model;
 }
-
 CPUAsset::ModelData CreateSphere() {
-  uint32_t slices = 32;
-  uint32_t stacks = 16;
   CPUAsset::MeshData mesh;
   mesh.materialIndex = 0;
-
   const float radius = 0.5f;
+  const uint32_t slices = 32;
+  const uint32_t stacks = 16;
 
-  for (uint32_t y = 0; y <= stacks; y++) {
-    float v = (float)y / stacks;
-    float phi = v * glm::pi<float>();
-
-    for (uint32_t x = 0; x <= slices; x++) {
-      float u = (float)x / slices;
-      float theta = u * glm::two_pi<float>();
-
-      glm::vec3 pos{radius * std::sin(phi) * std::cos(theta),
-                    radius * std::cos(phi),
-                    radius * std::sin(phi) * std::sin(theta)};
-
-      glm::vec3 normal = glm::normalize(pos);
-
-      mesh.vertices.push_back({pos, normal, {u, 1.0f - v}, glm::vec3(1, 0, 0)});
-    }
-  }
-
-  uint32_t stride = slices + 1;
-  for (uint32_t y = 0; y < stacks; y++) {
-    for (uint32_t x = 0; x < slices; x++) {
-      uint32_t i0 = y * stride + x;
-      uint32_t i1 = i0 + stride;
-
-      mesh.indices.insert(mesh.indices.end(),
-                          {i0, i1, i0 + 1, i0 + 1, i1, i1 + 1});
-    }
-  }
+  addHemisphere(mesh, radius, 0.0f, 1.0f, slices, stacks);
+  addHemisphere(mesh, radius, 0.0f, -1.0f, slices, stacks);
 
   CPUAsset::ModelData model;
   model.meshes.push_back(mesh);
@@ -111,70 +177,89 @@ CPUAsset::ModelData CreateSphere() {
 }
 
 CPUAsset::ModelData CreateCylinder() {
-  uint32_t slices = 32;
   CPUAsset::MeshData mesh;
   mesh.materialIndex = 0;
+  float radius = 0.5f, height = 1.0f;
+  addCylinderSide(mesh, radius, height);
+  addDisk(mesh, radius, {0, 0, height / 2}, {0, 0, 1});
+  addDisk(mesh, radius, {0, 0, -height / 2}, {0, 0, -1});
+  CPUAsset::ModelData model;
+  model.meshes.push_back(mesh);
+  return model;
+}
 
-  const float radius = 0.5f;
-  const float height = 1.0f;
-  const float halfH = height * 0.5f;
+CPUAsset::ModelData CreateCapsule() {
+  CPUAsset::MeshData mesh;
+  mesh.materialIndex = 0;
+  float radius = 0.5f, height = 1.0f;
+  addCylinderSide(mesh, radius, height);
+  addHemisphere(mesh, radius, height / 2, 1);
+  addHemisphere(mesh, radius, -height / 2, -1);
+  CPUAsset::ModelData model;
+  model.meshes.push_back(mesh);
+  return model;
+}
 
-  // --- Body ---
+CPUAsset::ModelData CreateCone() {
+  CPUAsset::MeshData mesh;
+  mesh.materialIndex = 0;
+  const uint32_t slices = 32;
+  float radius = 0.5f, height = 1.0f;
+  uint32_t tipIndex = mesh.vertices.size();
+  mesh.vertices.push_back(
+      {{0, 0, height / 2}, {0, 0, 1}, {0.5f, 1.0f}, {1, 0, 0}});
+
+  uint32_t baseStart = mesh.vertices.size();
   for (uint32_t i = 0; i <= slices; i++) {
-    float u = (float)i / slices;
-    float theta = u * glm::two_pi<float>();
-
-    float x = std::cos(theta);
-    float z = std::sin(theta);
-
-    glm::vec3 normal = {x, 0, z};
-
-    mesh.vertices.push_back(
-        {{radius * x, -halfH, radius * z}, normal, {u, 0}, glm::vec3(1, 0, 0)});
-
-    mesh.vertices.push_back(
-        {{radius * x, halfH, radius * z}, normal, {u, 1}, glm::vec3(1, 0, 0)});
+    float theta = float(i) / slices * glm::two_pi<float>();
+    float x = std::cos(theta), y = std::sin(theta);
+    glm::vec3 normal = glm::normalize(glm::vec3(x, y, radius / height));
+    glm::vec3 tangent = {-y, x, 0};
+    mesh.vertices.push_back({{radius * x, radius * y, -height / 2},
+                             normal,
+                             {float(i) / slices, 0},
+                             tangent});
   }
 
   for (uint32_t i = 0; i < slices; i++) {
-    uint32_t base = i * 2;
-    mesh.indices.insert(mesh.indices.end(), {base, base + 1, base + 2, base + 2,
-                                             base + 1, base + 3});
+    mesh.indices.insert(mesh.indices.end(),
+                        {tipIndex, baseStart + i, baseStart + i + 1});
   }
 
-  // --- Caps ---
-  auto addCap = [&](float y, float normalY) {
-    uint32_t centerIndex = mesh.vertices.size();
-    mesh.vertices.push_back(
-        {{0, y, 0}, {0, normalY, 0}, {0.5f, 0.5f}, glm::vec3(1, 0, 0)});
+  addDisk(mesh, radius, {0, 0, -height / 2}, {0, 0, -1}, slices);
+  CPUAsset::ModelData model;
+  model.meshes.push_back(mesh);
+  return model;
+}
 
-    for (uint32_t i = 0; i <= slices; i++) {
-      float u = (float)i / slices;
-      float theta = u * glm::two_pi<float>();
+CPUAsset::ModelData CreatePyramid() {
+  CPUAsset::MeshData mesh;
+  mesh.materialIndex = 0;
+  const float h = 0.5f;
+  glm::vec3 top{0, 0, h};
+  glm::vec3 base[4] = {{-h, -h, -h}, {h, -h, -h}, {h, h, -h}, {-h, h, -h}};
 
-      float x = std::cos(theta);
-      float z = std::sin(theta);
+  uint32_t topIndex = mesh.vertices.size();
+  mesh.vertices.push_back({top, {0, 0, 1}, {0.5f, 1}, {1, 0, 0}});
 
-      mesh.vertices.push_back({{radius * x, y, radius * z},
-                               {0, normalY, 0},
-                               {x * 0.5f + 0.5f, z * 0.5f + 0.5f},
-                               glm::vec3(1, 0, 0)});
-    }
+  uint32_t baseStart = mesh.vertices.size();
+  for (int i = 0; i < 4; i++) {
+    glm::vec3 e1 = base[(i + 1) % 4] - base[i];
+    glm::vec3 e2 = top - base[i];
+    glm::vec3 normal = glm::normalize(glm::cross(e1, e2));
+    glm::vec3 tangent = glm::normalize(e1);
+    mesh.vertices.push_back({base[i], normal, {float(i) / 4, 0}, tangent});
+  }
 
-    for (uint32_t i = 0; i < slices; i++) {
-      if (normalY > 0)
-        mesh.indices.insert(
-            mesh.indices.end(),
-            {centerIndex, centerIndex + i + 1, centerIndex + i + 2});
-      else
-        mesh.indices.insert(
-            mesh.indices.end(),
-            {centerIndex, centerIndex + i + 2, centerIndex + i + 1});
-    }
-  };
+  for (int i = 0; i < 4; i++)
+    mesh.indices.insert(mesh.indices.end(),
+                        {topIndex, baseStart + i, baseStart + (i + 1) % 4});
 
-  addCap(halfH, 1.0f);
-  addCap(-halfH, -1.0f);
+  uint32_t center = mesh.vertices.size();
+  mesh.vertices.push_back({{0, 0, -h}, {0, 0, -1}, {0.5f, 0.5f}, {1, 0, 0}});
+  for (int i = 0; i < 4; i++)
+    mesh.indices.insert(mesh.indices.end(),
+                        {center, baseStart + (i + 1) % 4, baseStart + i});
 
   CPUAsset::ModelData model;
   model.meshes.push_back(mesh);

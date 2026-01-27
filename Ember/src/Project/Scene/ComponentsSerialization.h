@@ -158,7 +158,7 @@ template <> struct convert<Ember::Component::Collider> {
             c.colliderType);
     node["offset"] = c.offset;
     node["rotation"] = c.rotation;
-    node["half_extents"] = c.halfExtents;
+    node["box_scale"] = c.boxScale;
     node["radius"] = c.radius;
     node["height"] = c.height;
     node["is_trigger"] = c.isTrigger;
@@ -170,7 +170,7 @@ template <> struct convert<Ember::Component::Collider> {
             node["collider_type"].as<std::string>());
     c.offset = node["offset"].as<glm::vec3>();
     c.rotation = node["rotation"].as<glm::quat>();
-    c.halfExtents = node["half_extents"].as<glm::vec3>();
+    c.boxScale = node["box_scale"].as<glm::vec3>();
     c.radius = node["radius"].as<float>();
     c.height = node["height"].as<float>();
     c.isTrigger = node["is_trigger"].as<bool>();

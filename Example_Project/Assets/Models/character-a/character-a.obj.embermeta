@@ -1,0 +1,8 @@
+asset_handle:
+  type: Model
+  guid: 11002183111843605765
+  path: Models/character-a/character-a.obj
+import_settings: ~
+dependencies:
+  - 1332538377202334650
+  - 13557946574028535

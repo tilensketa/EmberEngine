@@ -1,0 +1,10 @@
+asset_handle:
+  type: Material
+  guid: 13557946574028535
+  path: Models/character-a/character-a.objmat_1.embermat
+import_settings: ~
+dependencies:
+  - 11158030997184655371
+  - 0
+  - 0
+  - 0

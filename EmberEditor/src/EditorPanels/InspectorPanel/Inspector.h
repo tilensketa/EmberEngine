@@ -46,8 +46,8 @@ inline bool DrawComponent<Component::Transform>(Component::Transform &c,
                                                 EditorContext &context) {
   return DrawComponentUI(NAME(Component::Transform), [&]() {
     ImGui::DragFloat3("Position", &c.position.x, 0.1f);
-    ImGui::DragFloat4("Rotation", &c.rotation.x, 0.1f);
-    ImGui::DragFloat3("Scale", &c.scale.x, 0.1f);
+    ImGui::DragFloat4("Rotation", &c.rotation.x, 0.1f, 0.0f, 1.0f);
+    ImGui::DragFloat3("Scale", &c.scale.x, 0.1f, 0.0f, 100.0f);
   });
 }
 template <>
@@ -210,7 +210,7 @@ inline bool DrawComponent<Component::Collider>(Component::Collider &c,
     ImGui::DragFloat4("Rotation", &c.rotation[0], 0.1f, 0.0f, 1.0f);
 
     if (c.colliderType == Component::Collider::ColliderType::Box) {
-      ImGui::DragFloat3("HalfExtents", &c.halfExtents[0], 0.1f, 0.0f, 100.0f);
+      ImGui::DragFloat3("BoxScale", &c.boxScale[0], 0.1f, 0.0f, 10.0f);
     } else if (c.colliderType == Component::Collider::ColliderType::Sphere) {
       ImGui::DragFloat("Radius", &c.radius);
     } else if (c.colliderType == Component::Collider::ColliderType::Capsule) {

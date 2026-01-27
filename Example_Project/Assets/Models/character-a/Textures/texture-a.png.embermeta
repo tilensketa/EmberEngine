@@ -1,0 +1,9 @@
+asset_handle:
+  type: Texture
+  guid: 11158030997184655371
+  path: Models/character-a/Textures/texture-a.png
+import_settings:
+  texture_type: Albedo
+  filter_type: Linear
+  wrap_type: Repeat
+  generate_mipmaps: true

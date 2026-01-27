@@ -5,18 +5,20 @@
 #include "Project/Scene/Components.h"
 
 namespace Ember {
+
 reactphysics3d::Vector3 FromGlmVec3(const glm::vec3 &v) {
   return reactphysics3d::Vector3(v.x, v.y, v.z);
-}
-reactphysics3d::Quaternion FromGlmQuat(const glm::quat &q) {
-  return reactphysics3d::Quaternion(q.x, q.y, q.z, q.w);
 }
 glm::vec3 FromReactVec3(const reactphysics3d::Vector3 &v) {
   return glm::vec3(v.x, v.y, v.z);
 }
+reactphysics3d::Quaternion FromGlmQuat(const glm::quat &q) {
+  return reactphysics3d::Quaternion(q.x, q.y, q.z, q.w);
+}
 glm::quat FromReactQuat(const reactphysics3d::Quaternion &q) {
   return glm::quat(q.w, q.x, q.y, q.z);
 }
+
 reactphysics3d::BodyType
 FromBodyType(const Component::Rigidbody::BodyType &type) {
   switch (type) {
@@ -122,24 +124,34 @@ void PhysicsLayer::createWorld() {
 
     if (mScene->HasComponent<Component::Collider>(physicsEntity)) {
       auto &collider = mScene->Get<Component::Collider>(physicsEntity);
+      glm::quat defaultRot;
+      defaultRot.w = 0.70710678118f;
+      defaultRot.x = 0.70710678118f;
+      defaultRot.y = 0.0f;
+      defaultRot.z = 0.0f;
       reactphysics3d::Transform offsetTransform(FromGlmVec3(collider.offset),
-                                                FromGlmQuat(collider.rotation));
+                                                FromGlmQuat(defaultRot));
+      // FromGlmQuat(collider.rotation));
+      auto transScale =
+          glm::vec3(transform.scale.x, transform.scale.z, transform.scale.y);
+      reactphysics3d::CollisionShape *shape = nullptr;
       if (collider.colliderType == Component::Collider::ColliderType::Box) {
-        auto shape = mCommon.createBoxShape(
-            FromGlmVec3(collider.halfExtents * transform.scale));
-        body->addCollider(shape, offsetTransform);
+        auto collScale = glm::vec3(collider.boxScale.x, collider.boxScale.z,
+                                   collider.boxScale.y);
+        shape = mCommon.createBoxShape(
+            FromGlmVec3((collScale * transScale) * 0.5f));
       } else if (collider.colliderType ==
                  Component::Collider::ColliderType::Sphere) {
-        auto shape =
-            mCommon.createSphereShape(collider.radius * transform.scale.x);
-        body->addCollider(shape, offsetTransform);
+        shape = mCommon.createSphereShape(collider.radius *
+                                          glm::compMax(transScale) * 0.5f);
       } else if (collider.colliderType ==
                  Component::Collider::ColliderType::Capsule) {
-        auto shape =
-            mCommon.createCapsuleShape(collider.radius * transform.scale.x,
-                                       collider.height * transform.scale.z);
-        body->addCollider(shape, offsetTransform);
+        float maxRadius = glm::max(transScale.x, transScale.z);
+        shape =
+            mCommon.createCapsuleShape(collider.radius * maxRadius * 0.5f,
+                                       collider.height * transScale.y * 0.5f);
       }
+      if (shape) body->addCollider(shape, offsetTransform);
     }
   }
 }
