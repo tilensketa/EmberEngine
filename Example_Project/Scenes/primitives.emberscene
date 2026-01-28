@@ -1,354 +1,35 @@
 guid: 2186956471089678821
 name: primitives
 entities:
-  - Id: 4545578303271222112
-    Tag: Camera
+  - Id: 1804942836623268076
+    Tag: PointLight
     Transform:
       position:
-        - 9.99831
+        - 4.9779043
         - 0
-        - -0.79472136
+        - 2.0498047
       rotation:
         - 0
         - 0
         - 0
         - 1
       scale:
+        - 12.1
+        - 12.1
+        - 12.1
+    Light:
+      light_type: Point
+      color:
         - 1
         - 1
         - 1
-    Camera:
-      projection: Perspective
-      view_mode: Rendered
-      resolution:
-        - 1920
-        - 1080
-      ortho_size: 2
-      near: 0.1
-      far: 100000
-      fov: 45
-      active: true
-  - Id: 18019307968111353806
-    Tag: Ground
-    Transform:
-      position:
-        - 0
-        - 0.78059995
-        - -2.5933666
-      rotation:
-        - -0.045549214
-        - 0.043472026
-        - 0.0003030412
-        - 0.9980157
-      scale:
-        - 10
-        - 10.000002
-        - 1
-    Model:
-      model:
-        type: Model
-        guid: 2
-        path: Cube
-      material_overrides:
-        - 0
-    Rigidbody:
-      body_type: Static
-      mass: 1
-      use_gravity: true
-    Collider:
-      collider_type: Box
-      offset:
-        - 0
-        - 0
-        - 0
-      rotation:
-        - 0
-        - 0
-        - 0
-        - 1
-      box_scale:
-        - 1
-        - 1
-        - 1
-      radius: 1
-      height: 2
-      is_trigger: false
-  - Id: 2730229842886256341
-    Tag: Circle
-    Transform:
-      position:
-        - 0
-        - 0.46876466
-        - 1.3415146
-      rotation:
-        - 0
-        - 0.76868755
-        - 0
-        - 0.6396244
-      scale:
-        - 0.9999956
-        - 1
-        - 0.9999955
-    Model:
-      model:
-        type: Model
-        guid: 3
-        path: Circle
-      material_overrides:
-        - 0
-  - Id: 16008773284727738227
-    Tag: Plane
-    Transform:
-      position:
-        - 0
-        - -1.4090936
-        - 1.3330349
-      rotation:
-        - 0
-        - 0.6889
-        - 0
-        - 0.7248564
-      scale:
-        - 0.9999974
-        - 1
-        - 0.9999928
-    Model:
-      model:
-        type: Model
-        guid: 1
-        path: Plane
-      material_overrides:
-        - 0
-  - Id: 9655170932498407532
-    Tag: Pyramid
-    Transform:
-      position:
-        - 1.2993987
-        - 4.9072657
-        - -0.5771594
-      rotation:
-        - 0
-        - 0
-        - 0
-        - 1
-      scale:
-        - 1
-        - 1
-        - 1
-    Model:
-      model:
-        type: Model
-        guid: 8
-        path: Pyramid
-      material_overrides:
-        - 3504036447204300810
-    Rigidbody:
-      body_type: Dynamic
-      mass: 1
-      use_gravity: true
-    Collider:
-      collider_type: Box
-      offset:
-        - 0
-        - 0
-        - 0
-      rotation:
-        - 0
-        - 0
-        - 0
-        - 1
-      box_scale:
-        - 1
-        - 1
-        - 1
-      radius: 1
-      height: 2
-      is_trigger: false
-  - Id: 15246940758486499417
-    Tag: Cone
-    Transform:
-      position:
-        - 1.3922802
-        - 3.0460434
-        - -0.56521535
-      rotation:
-        - 0
-        - 0
-        - 0
-        - 1
-      scale:
-        - 1
-        - 1
-        - 1
-    Model:
-      model:
-        type: Model
-        guid: 7
-        path: Cone
-      material_overrides:
-        - 0
-    Rigidbody:
-      body_type: Dynamic
-      mass: 1
-      use_gravity: true
-    Collider:
-      collider_type: Box
-      offset:
-        - 0
-        - 0
-        - 0
-      rotation:
-        - 0
-        - 0
-        - 0
-        - 1
-      box_scale:
-        - 1
-        - 1
-        - 1
-      radius: 1
-      height: 2
-      is_trigger: false
-  - Id: 11283295215905909907
-    Tag: Capsule
-    Transform:
-      position:
-        - 1.9340764
-        - 1.3438929
-        - -0.44849962
-      rotation:
-        - 0
-        - 5.315085e-08
-        - 4.816448e-07
-        - 1
-      scale:
-        - 1
-        - 0.9999991
-        - 0.9999991
-    Model:
-      model:
-        type: Model
-        guid: 6
-        path: Capsule
-      material_overrides:
-        - 10473287494837267733
-    Rigidbody:
-      body_type: Dynamic
-      mass: 1
-      use_gravity: true
-    Collider:
-      collider_type: Capsule
-      offset:
-        - 0
-        - 0
-        - 0
-      rotation:
-        - 0
-        - 0
-        - 0
-        - 1
-      box_scale:
-        - 1
-        - 1
-        - 1
-      radius: 1
-      height: 2
-      is_trigger: false
-  - Id: 9112871374393817143
-    Tag: Cylinder
-    Transform:
-      position:
-        - 1.3922879
-        - -0.39690867
-        - -0.5652166
-      rotation:
-        - 0
-        - 0
-        - 0
-        - 1
-      scale:
-        - 1
-        - 1
-        - 1
-    Model:
-      model:
-        type: Model
-        guid: 5
-        path: Cylinder
-      material_overrides:
-        - 9757647439610745383
-    Rigidbody:
-      body_type: Dynamic
-      mass: 1
-      use_gravity: true
-    Collider:
-      collider_type: Box
-      offset:
-        - 0
-        - 0
-        - 0
-      rotation:
-        - 0
-        - 0
-        - 0
-        - 1
-      box_scale:
-        - 1
-        - 1
-        - 1
-      radius: 1
-      height: 1
-      is_trigger: false
-  - Id: 4924487781053965807
-    Tag: Sphere
-    Transform:
-      position:
-        - 1.2669705
-        - -1.9912052
-        - -0.71925557
-      rotation:
-        - 2.0954983e-06
-        - 0
-        - 0
-        - 1
-      scale:
-        - 1
-        - 1
-        - 1
-    Model:
-      model:
-        type: Model
-        guid: 4
-        path: Sphere
-      material_overrides:
-        - 0
-    Rigidbody:
-      body_type: Dynamic
-      mass: 1
-      use_gravity: true
-    Collider:
-      collider_type: Sphere
-      offset:
-        - 0
-        - 0
-        - 0
-      rotation:
-        - 0
-        - 0
-        - 0
-        - 1
-      box_scale:
-        - 1
-        - 1
-        - 1
-      radius: 1
-      height: 2
-      is_trigger: false
+      intensity: 10
+      radius: 12.1
   - Id: 3958314667298703574
     Tag: Cube
     Transform:
       position:
-        - 1.3922604
+        - 0
         - -3.549415
         - -0.5652185
       rotation:
@@ -386,30 +67,349 @@ entities:
         - 1
         - 1
         - 1
-      radius: 1
-      height: 2
+      radius: 0.5
+      height: 1
       is_trigger: false
-  - Id: 1804942836623268076
-    Tag: PointLight
+  - Id: 4924487781053965807
+    Tag: Sphere
     Transform:
       position:
-        - 4.9779043
         - 0
-        - 2.0498047
+        - -1.9912052
+        - -0.71925557
+      rotation:
+        - 2.0954983e-06
+        - 0
+        - 0
+        - 1
+      scale:
+        - 1
+        - 1
+        - 1
+    Model:
+      model:
+        type: Model
+        guid: 4
+        path: Sphere
+      material_overrides:
+        - 0
+    Rigidbody:
+      body_type: Dynamic
+      mass: 1
+      use_gravity: true
+    Collider:
+      collider_type: Sphere
+      offset:
+        - 0
+        - 0
+        - 0
+      rotation:
+        - 0
+        - 0
+        - 0
+        - 1
+      box_scale:
+        - 1
+        - 1
+        - 1
+      radius: 0.5
+      height: 1
+      is_trigger: false
+  - Id: 9112871374393817143
+    Tag: Cylinder
+    Transform:
+      position:
+        - 0
+        - -0.39690867
+        - -0.5652166
       rotation:
         - 0
         - 0
         - 0
         - 1
       scale:
-        - 12.1
-        - 12.1
-        - 12.1
-    Light:
-      light_type: Point
-      color:
         - 1
         - 1
         - 1
-      intensity: 10
-      radius: 12.1
+    Model:
+      model:
+        type: Model
+        guid: 5
+        path: Cylinder
+      material_overrides:
+        - 9757647439610745383
+    Rigidbody:
+      body_type: Dynamic
+      mass: 1
+      use_gravity: true
+    Collider:
+      collider_type: Box
+      offset:
+        - 0
+        - 0
+        - 0
+      rotation:
+        - 0
+        - 0
+        - 0
+        - 1
+      box_scale:
+        - 1
+        - 1
+        - 1
+      radius: 0.5
+      height: 1
+      is_trigger: false
+  - Id: 11283295215905909907
+    Tag: Capsule
+    Transform:
+      position:
+        - 0
+        - 1.3438929
+        - -0.44849962
+      rotation:
+        - 0
+        - 5.315085e-08
+        - 4.816448e-07
+        - 1
+      scale:
+        - 1
+        - 0.9999991
+        - 0.9999991
+    Model:
+      model:
+        type: Model
+        guid: 6
+        path: Capsule
+      material_overrides:
+        - 10473287494837267733
+    Rigidbody:
+      body_type: Dynamic
+      mass: 1
+      use_gravity: true
+    Collider:
+      collider_type: Capsule
+      offset:
+        - 0
+        - 0
+        - 0
+      rotation:
+        - 0
+        - 0
+        - 0
+        - 1
+      box_scale:
+        - 1
+        - 1
+        - 1
+      radius: 0.5
+      height: 1
+      is_trigger: false
+  - Id: 15246940758486499417
+    Tag: Cone
+    Transform:
+      position:
+        - 0
+        - 3.0460434
+        - -0.56521535
+      rotation:
+        - 0
+        - 0
+        - 0
+        - 1
+      scale:
+        - 1
+        - 1
+        - 1
+    Model:
+      model:
+        type: Model
+        guid: 7
+        path: Cone
+      material_overrides:
+        - 0
+    Rigidbody:
+      body_type: Dynamic
+      mass: 1
+      use_gravity: true
+    Collider:
+      collider_type: Box
+      offset:
+        - 0
+        - 0
+        - 0
+      rotation:
+        - 0
+        - 0
+        - 0
+        - 1
+      box_scale:
+        - 1
+        - 1
+        - 1
+      radius: 0.5
+      height: 1
+      is_trigger: false
+  - Id: 9655170932498407532
+    Tag: Pyramid
+    Transform:
+      position:
+        - 0
+        - 4.9072657
+        - -0.5771594
+      rotation:
+        - 0
+        - 0
+        - 0
+        - 1
+      scale:
+        - 1
+        - 1
+        - 1
+    Model:
+      model:
+        type: Model
+        guid: 8
+        path: Pyramid
+      material_overrides:
+        - 3504036447204300810
+    Rigidbody:
+      body_type: Dynamic
+      mass: 1
+      use_gravity: true
+    Collider:
+      collider_type: Box
+      offset:
+        - 0
+        - 0
+        - 0
+      rotation:
+        - 0
+        - 0
+        - 0
+        - 1
+      box_scale:
+        - 1
+        - 1
+        - 1
+      radius: 0.5
+      height: 1
+      is_trigger: false
+  - Id: 16008773284727738227
+    Tag: Plane
+    Transform:
+      position:
+        - 0
+        - -1.4090936
+        - 1.3330349
+      rotation:
+        - 0
+        - 0.6889
+        - 0
+        - 0.7248564
+      scale:
+        - 0.9999974
+        - 1
+        - 0.9999928
+    Model:
+      model:
+        type: Model
+        guid: 1
+        path: Plane
+      material_overrides:
+        - 0
+  - Id: 2730229842886256341
+    Tag: Circle
+    Transform:
+      position:
+        - 0
+        - 0.46876466
+        - 1.3415146
+      rotation:
+        - 0
+        - 0.76868755
+        - 0
+        - 0.6396244
+      scale:
+        - 0.9999956
+        - 1
+        - 0.9999955
+    Model:
+      model:
+        type: Model
+        guid: 3
+        path: Circle
+      material_overrides:
+        - 0
+  - Id: 18019307968111353806
+    Tag: Ground
+    Transform:
+      position:
+        - 0
+        - 0.7561861
+        - -3.765357
+      rotation:
+        - -0.02535277
+        - 0.06885855
+        - -0.0014497361
+        - 0.9973032
+      scale:
+        - 9.999987
+        - 10.000003
+        - 0.99999964
+    Model:
+      model:
+        type: Model
+        guid: 2
+        path: Cube
+      material_overrides:
+        - 0
+    Rigidbody:
+      body_type: Static
+      mass: 1
+      use_gravity: true
+    Collider:
+      collider_type: Box
+      offset:
+        - 0
+        - 0
+        - 0
+      rotation:
+        - 0
+        - 0
+        - 0
+        - 1
+      box_scale:
+        - 1
+        - 1
+        - 1
+      radius: 0.5
+      height: 1
+      is_trigger: false
+  - Id: 4545578303271222112
+    Tag: Camera
+    Transform:
+      position:
+        - 9.99831
+        - 0
+        - -0.79472136
+      rotation:
+        - 0
+        - 0
+        - 0
+        - 1
+      scale:
+        - 1
+        - 1
+        - 1
+    Camera:
+      projection: Perspective
+      view_mode: Rendered
+      resolution:
+        - 1920
+        - 1080
+      ortho_size: 2
+      near: 0.1
+      far: 100000
+      fov: 45
+      active: true

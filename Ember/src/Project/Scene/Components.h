@@ -4,6 +4,8 @@
 #include "Core/Utils.h"
 #include "Project/Assets/AssetHandle.h"
 
+#include "Physics/IPhysicsBackend.h"
+
 #include <glm/glm.hpp>
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -12,8 +14,6 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/matrix_decompose.hpp>
 #include <glm/gtx/quaternion.hpp>
-
-#include <reactphysics3d/reactphysics3d.h>
 
 namespace Ember {
 namespace Component {
@@ -95,7 +95,7 @@ struct Rigidbody {
   float mass = 1.0f;
   bool useGravity = true;
 
-  reactphysics3d::RigidBody *physicsBodyHandle = nullptr;
+  Physics::IPhysicsBody *physicsBodyHandle = nullptr;
 };
 
 struct Collider {

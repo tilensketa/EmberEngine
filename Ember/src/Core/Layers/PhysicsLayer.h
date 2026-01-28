@@ -5,7 +5,7 @@
 
 #include <memory>
 
-#include <reactphysics3d/reactphysics3d.h>
+#include "Physics/PhysicsFactory.h"
 
 namespace Ember {
 class PhysicsLayer : public ILayer {
@@ -23,7 +23,7 @@ private:
   void destroyWorld();
 
 private:
-  reactphysics3d::PhysicsCommon mCommon;
+  Physics::PhysicsFactory mPhysicsFactory;
   std::shared_ptr<Scene> mScene = nullptr;
   bool mSimulate = false;
 };

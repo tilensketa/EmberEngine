@@ -39,6 +39,8 @@ set(SOURCES
   src/Renderer/Renderer.cpp
   src/Renderer/RenderTarget.cpp
   src/Renderer/Shader.cpp
+
+  src/Physics/react/ReactPhysics.cpp
 )
 
 find_package(OpenGL REQUIRED)

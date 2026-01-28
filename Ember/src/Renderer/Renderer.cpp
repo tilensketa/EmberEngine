@@ -183,13 +183,14 @@ void Renderer::renderColliders(const RenderContext &ctx, Shader *shader) {
     } else if (collider.colliderType ==
                Component::Collider::ColliderType::Sphere) {
       handle = EngineAssetLoader::GetPrimitive(EnginePrimitive::Sphere);
-      colliderTransform.scale = glm::vec3(collider.radius);
+      colliderTransform.scale = glm::vec3(collider.radius * 2.0f);
       transform.scale = glm::vec3(glm::compMax(transform.scale));
     } else if (collider.colliderType ==
                Component::Collider::ColliderType::Capsule) {
       handle = EngineAssetLoader::GetPrimitive(EnginePrimitive::Capsule);
       colliderTransform.scale =
-          glm::vec3(collider.radius, collider.radius, collider.height * 0.5f);
+          glm::vec3(collider.radius * 2.0f, collider.radius * 2.0f,
+                    (collider.height + 2 * collider.radius) * 0.5f);
       float maxRadius = glm::max(transform.scale.x, transform.scale.y);
       transform.scale = glm::vec3(maxRadius, maxRadius, transform.scale.z);
     }

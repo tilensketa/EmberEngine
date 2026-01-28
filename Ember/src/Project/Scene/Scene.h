@@ -5,9 +5,9 @@
 #include "Core/GUID.h"
 #include "Core/Logger.h"
 #include "Core/Serialization.h"
+#include "Physics/IPhysicsBackend.h"
 
 #include <entt/entt.hpp>
-#include <reactphysics3d/reactphysics3d.h>
 
 namespace Ember {
 struct EntityHandle {
@@ -123,10 +123,11 @@ public:
     mRegistry->remove<T>(handle.entity);
   }
 
-  void SetPhysicsWorld(reactphysics3d::PhysicsWorld *world) {
-    mPhysicsWorld = world;
+  void SetPhysicsWorld(std::unique_ptr<Physics::IPhysicsWorld> world) {
+    mPhysicsWorld = std::move(world);
   }
-  reactphysics3d::PhysicsWorld *GetPhysicsWorld() { return mPhysicsWorld; }
+  Physics::IPhysicsWorld *GetPhysicsWorld() { return mPhysicsWorld.get(); }
+  void DestroyPhysicsWorld() { mPhysicsWorld.reset(); }
 
 private:
   GUID mGuid = GUID::NONE();
@@ -134,7 +135,7 @@ private:
   std::unique_ptr<entt::registry> mRegistry = nullptr;
   std::unordered_map<entt::entity, GUID> mEntityGuids;
 
-  reactphysics3d::PhysicsWorld *mPhysicsWorld = nullptr;
+  std::unique_ptr<Physics::IPhysicsWorld> mPhysicsWorld = nullptr;
 };
 } // namespace Ember
 
